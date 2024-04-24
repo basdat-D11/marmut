@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px; /* Menambahkan jarak 10px di antara kolom */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daftar Konten</h1>
+    <table>
+        <tr>
+            <th>Judul</th>
+            <th>Tanggal Rilis</th>
+            <th>Tahun</th>
+            <th>Durasi</th>
+        </tr>
+        {% for konten in konten %}
+            <tr>
+                <td>{{ konten.judul }}</td>
+                <td>{{ konten.tanggal_rilis }}</td>
+                <td>{{ konten.tahun }}</td>
+                <td>{{ konten.durasi }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

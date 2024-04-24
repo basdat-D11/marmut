@@ -1,0 +1,38 @@
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px; /* Menambahkan jarak 10px di antara kolom */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daftar Akun</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        {% for akun in akun %}
+            <tr>
+                <td>{{ akun.nama }}</td>
+                <td>{{ akun.email }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+{% endblock %}
