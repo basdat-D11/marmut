@@ -15,3 +15,6 @@ def show_konten(request):
     query_str = "SELECT * FROM konten"
     hasil = query(query_str)
     return render(request, 'konten.html', {'konten': hasil})
+
+
+#ngetes doang
