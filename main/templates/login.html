@@ -45,7 +45,7 @@
         {% if error_message %}
             <p>{{ error_message }}</p>
         {% endif %}
-        <form id="loginForm" action="{% url 'main:dashboard' %}" method="post">
+        <form id="loginForm" action="{% url 'main:handlelogin' %}" method="post">
             <input id= 'email' type="email" name="email" class="form-input" placeholder="Email" required>
             <br>
             <input id= 'password' type="password" name="password" class="form-input" placeholder="Password" required>

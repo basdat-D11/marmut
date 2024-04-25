@@ -41,7 +41,8 @@ def login(request):
         akun['kota'] = hasil[0]['kota_asal']
         akun['gender'] = hasil[0]['gender']
         akun['tpt_lahir'] = hasil[0]['tempat_lahir']
-        akun['tgl_lahir'] = hasil[0]['tanggal_lahir']
+        #ubah date ke string
+        akun['tgl_lahir'] = hasil[0]['tanggal_lahir'].strftime('%Y-%m-%d')
         akun['role'] = role
     
         query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
@@ -65,7 +66,8 @@ def login(request):
             akun['gender'] = 'Laki-laki'
         else:
             akun['gender'] = 'Perempuan'
-        return render(request, 'dashboard.html', akun)
+        request.session['akun'] = akun
+        return HttpResponseRedirect(reverse('main:dashboard'))
 
     else:
         query_str = f"SELECT * FROM label WHERE email = '{email}'"
@@ -83,9 +85,23 @@ def login(request):
                 daftar_album.add(album['judul'])
             daftar_album = list(daftar_album)
             akun['album'] = daftar_album
-            return render(request, 'dasboard_label.html', akun)
+            request.session['akun'] = akun
+            return HttpResponseRedirect('/main/dashboard')
         #request.session['error_message'] = "Email atau password salah. Silakan coba lagi."
         return redirect(reverse('main:page_login'))
+    
+@csrf_exempt    
+def to_dashboard(request):
+    akun = request.session.get('akun', None)
+    if akun:
+        try:
+            role = akun['role']
+            return render(request, 'dashboard.html', akun)
+        except:
+            return render(request, 'dasboard_label.html', akun)
+    else:
+        return redirect(reverse('main:page_login'))
+    
 def cek_artis(email):
     query_str = f"SELECT * FROM artist WHERE email_akun = '{email}'"
     hasil = query(query_str)
@@ -183,6 +199,7 @@ def build_akun(email, role):
         daftar_podcast = list(daftar_podcast)
         akun['podcast'] = daftar_podcast
     return akun
+
 
 def ceklogin(email, password):
     query_str = f"SELECT * FROM akun WHERE email = '{email}' and password = '{password}'"
