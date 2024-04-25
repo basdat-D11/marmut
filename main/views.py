@@ -214,3 +214,6 @@ def validate_login(request):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'success': False, 'message': 'Email atau password salah.'})
+
+def register(request):
+    return render(request, 'registrasi.html')
