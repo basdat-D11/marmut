@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+        }
+        .form-input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 250px;
+            font-size: 16px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% endif %}
+        <form id="loginForm" action="{% url 'main:dashboard' %}" method="post">
+            <input id= 'email' type="email" name="email" class="form-input" placeholder="Email" required>
+            <br>
+            <input id= 'password' type="password" name="password" class="form-input" placeholder="Password" required>
+            <br>
+            <button type="submit" class="button">Login</button>
+        </form>
+    </div>
+
+
+
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    console.log(email)
+
+    fetch('/main/validate_login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, password: password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            this.submit()
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    });
+    </script>
+</body>     
+</html>

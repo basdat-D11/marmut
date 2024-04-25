@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <p>Nama: {{ nama }}</p>
+    <p>Email: {{ email }}</p>
+    <p>Kota: {{ kota }}</p>
+    <p>Gender: {{ gender }}</p>
+    <p>Tempat lahir: {{ tpt_lahir }}</p>
+    <p>Tanggal lahir: {{ tgl_lahir }}</p>
+    <p>Role: {{ role }}</p>
+    <!-- Tampilkan informasi sesuai dengan role -->
+
+        <!-- Tampilkan daftar playlist -->
+    <h2>Daftar Playlist</h2>
+    {% if playlist %}
+        <ul>
+            {% for playlist in playlist %}
+                <li>{{ playlist }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Belum Memiliki Playlist</p>
+    {% endif %}
+
+    {% if 'artis' in role or 'songwriter' in role %}
+        <!-- Tampilkan daftar lagu -->
+        <h2>Daftar Lagu</h2>
+        {% if lagu %}
+            <ul>
+                {% for lagu in lagu %}
+                    <li>{{ lagu }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Lagu</p>
+        {% endif %}
+    {% endif %}
+
+    {% if 'podcaster' in role %}
+        <!-- Tampilkan daftar podcast -->
+        <h2>Daftar Podcast</h2>
+        {% if podcast %}
+            <ul>
+                {% for podcast in podcast %}
+                    <li>{{ podcast }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Podcast</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
