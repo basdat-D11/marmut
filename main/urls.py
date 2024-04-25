@@ -7,5 +7,6 @@ urlpatterns = [
     path('tes', home, name='home'),
     path('page_login', page_login, name='page_login'),
     path('dashboard', login, name='dashboard'),
-    path('validate_login' , validate_login, name='validate_login'),
+    path('validate_login' , validate_login, name='validate_login'),\
+    path('register', register, name='register'),
 ]
