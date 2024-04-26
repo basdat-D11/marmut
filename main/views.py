@@ -95,10 +95,10 @@ def to_dashboard(request):
     akun = request.session.get('akun', None)
     if akun:
         try:
-            role = akun['role']
-            return render(request, 'dashboard.html', akun)
-        except:
+            role = akun['kontak']
             return render(request, 'dasboard_label.html', akun)
+        except:
+            return render(request, 'dashboard.html', akun)
     else:
         return redirect(reverse('main:page_login'))
     
