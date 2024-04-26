@@ -17,17 +17,18 @@
     <!-- Tampilkan informasi sesuai dengan role -->
 
         <!-- Tampilkan daftar playlist -->
+    {% if role == 'Pengguna Biasa' %}
     <h2>Daftar Playlist</h2>
-    {% if playlist %}
-        <ul>
-            {% for playlist in playlist %}
-                <li>{{ playlist }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Belum Memiliki Playlist</p>
+        {% if playlist %}
+            <ul>
+                {% for playlist in playlist %}
+                    <li>{{ playlist }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Belum Memiliki Playlist</p>
+        {% endif %}
     {% endif %}
-
     {% if 'artis' in role or 'songwriter' in role %}
         <!-- Tampilkan daftar lagu -->
         <h2>Daftar Lagu</h2>
