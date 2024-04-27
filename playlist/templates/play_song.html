@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Detail</title>
+    <style>
+        /* CSS untuk slider */
+        .slider {
+            width: 300px;
+            margin-top: 20px;
+        }
+
+        .slider-track {
+            width: 100%;
+            height: 5px;
+            background-color: #ddd;
+            position: relative;
+            border-radius: 5px;
+        }
+
+        .slider-thumb {
+            width: 20px;
+            height: 20px;
+            background-color: #007bff00;
+            border-radius: 50%;
+            position: absolute;
+            top: -8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Song Detail</h1>
+    <div>
+        <p><strong>Judul:</strong> Song1</p>
+        <p><strong>Genre(s):</strong> -Genre1-Genre2</p>
+        <p><strong>Artist:</strong> Artist1</p>
+        <p><strong>Songwriter(s):</strong> -Songwriter1-Songwriter2</p>
+        <p><strong>Durasi:</strong> 3 menit</p>
+        <p><strong>Tanggal Rilis:</strong> 18/03/24</p>
+        <p><strong>Tahun:</strong> 2024</p>
+        <p><strong>Total Play:</strong> 0</p>
+        <p><strong>Total Downloads:</strong> 0</p>
+        <p><strong>Album:</strong> Album1</p>
+    </div>
+    <div>
+        <!-- Slider -->
+        <div class="slider">
+            <input type="range" min="0" max="100" value="0" class="slider-input">
+            <div class="slider-track"></div>
+            <div class="slider-thumb"></div>
+        </div>
+    </div>
+    <div>
+        <button>Play</button>
+        <button>Add to Playlist</button>
+        <button>Download</button>
+        <a href="#">Kembali</a>
+    </div>
+
+    <!-- JavaScript untuk mengatur pergerakan slider thumb -->
+    <script>
+        var slider = document.querySelector('.slider');
+        var sliderInput = slider.querySelector('.slider-input');
+        var sliderThumb = slider.querySelector('.slider-thumb');
+
+        sliderInput.addEventListener('input', function() {
+            var percentage = (this.value - this.min) / (this.max - this.min);
+            var thumbPosition = percentage * (slider.clientWidth - sliderThumb.clientWidth);
+            sliderThumb.style.left = thumbPosition + 'px';
+        });
+    </script>
+</body>
+</html>
