@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Playlist Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .detail-section label {
+            font-weight: bold;
+        }
+
+        .song-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .song-list th, .song-list td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .song-list th {
+            background-color: #f2f2f2;
+        }
+
+        .song-list tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .song-actions a {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Playlist Detail</h1>
+        
+        <!-- Detail Playlist -->
+        <div class="detail-section">
+            <label for="judul">Judul:</label>
+            <span id="judul">{{ playlist.judul }}</span><br>
+            <label for="pembuat">Pembuat:</label>
+            <span id="pembuat">{{ pembuat }}</span><br>
+            <label for="jumlah_lagu">Jumlah Lagu:</label>
+            <span id="jumlah_lagu">{{ playlist.jumlah_lagu }}</span><br>
+            <label for="total_durasi">Total Durasi:</label>
+            <span id="total_durasi">{{ playlist.total_durasi }}</span><br>
+            <label for="tanggal_dibuat">Tanggal Dibuat:</label>
+            <span id="tanggal_dibuat">{{ playlist.tanggal_dibuat }}</span><br>
+            <label for="deskripsi">Deskripsi:</label>
+            <p id="deskripsi">{{ playlist.deskripsi }}</p><br>
+            <a href="#">[Shuffle Play]</a>
+            <a href="#">[Kembali]</a>
+        </div>
+        
+        <!-- Daftar Lagu -->
+        <div class="detail-section">
+            <h2>Daftar Lagu</h2>
+            <table class="song-list">
+                <thead>
+                    <tr>
+                        <th>Judul Lagu</th>
+                        <th>Oleh</th>
+                        <th>Durasi</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lagu in lagu %}
+                    <tr>
+                        <td>{{ lagu.judul }}</td>
+                        <td>{{ lagu.oleh }}</td>
+                        <td>{{ lagu.durasi }}</td>
+                        <td class="song-actions">
+                            <a href="#">[Lihat]</a>
+                            <a href="#">[Play]</a>
+                            <a href="#">[Hapus]</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="#">[Tambah Lagu]</a>
+        </div>
+    </div>
+</body>
+</html>
