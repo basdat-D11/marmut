@@ -5,6 +5,7 @@ from utils.query import query
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from datetime import datetime
 
 
 def show_playlist(request):
@@ -45,3 +46,23 @@ def show_detail_playlist(request):
 
 def show_play(request):
     return render(request, 'play_song.html')
+
+def add_playlist(request):
+    data = json.loads(request.body)
+
+    nama = data['nama']
+    deskripsi = data['deskripsi']
+
+    akun = request.session.get('akun', None)
+    uuid = str(uuid.uuid4())
+
+    query_str = f"""INSERT INTO palylist (id) VALUES ('{uuid}')"""
+    query(query_str)
+
+    uuid2 = str(uuid.uuid4())
+    tanggal = datetime.now().strftime("%Y-%m-%d")
+
+    query_str = f"""INSERT INTO marmut.user_playlist VALUES ('{akun['email']}', '{uuid2}', '{nama}', '{deskripsi}', 0, '{tanggal}', '{uuid}', 0);"""
+    query(query_str)
+
+    return JsonResponse({'status': 'success'})

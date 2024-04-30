@@ -7,7 +7,7 @@ from psycopg2.extras import RealDictCursor
 
 try:
     connection = psycopg2.connect(user="postgres.bqgirmppkugtmotygmil",
-                        password="wu6T61SNZSQug4iN",
+                        password="UVmzdTu3jLprDYSY",
                         host="aws-0-ap-southeast-1.pooler.supabase.com",
                         port="5432",
                         database="postgres")
