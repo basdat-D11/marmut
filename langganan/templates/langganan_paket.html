@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Langganan Paket</title>
+    <style>
+        table {
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center; /* Default alignment to center for all cells */
+        }
+        .header-row th {
+            background-color: #f2f2f2;
+            color: black;
+            text-align: left; /* Align the text to the left for header row */
+        }
+        .header-row th:last-child {
+            text-align: right; /* Align the text to the right for the last cell in the header row */
+        }
+        .blue-text {
+            color: blue;
+            cursor: pointer;
+        }
+        .clickable {
+            text-decoration: none;
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr class="header-row">
+                <th colspan="3">LANGGANAN PAKET</th>
+                <th style="text-align: right;"><a href="{% url 'langganan:riwayat_transaksi' %}" class="clickable">[Riwayat Transaksi]</a></th>
+            </tr>
+            <tr>
+                <th style="text-align: center;">Jenis</th>
+                <th style="text-align: center;">Harga</th>
+                <th colspan="2" style="text-align: center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paket in paket %}
+            <tr>
+                <td>{{ paket.jenis }}</td>
+                <td>{{ paket.harga }}</td>
+                <td colspan="2" class="blue-text">
+                    <a href="{% url 'langganan:pembayaran_paket' paket.jenis paket.harga %}" class="clickable">[Berlangganan]</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

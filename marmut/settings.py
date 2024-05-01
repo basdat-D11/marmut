@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'tesapp',
     'main',
     'playlist',
+    'langganan',
+    'download',
+    'search',
 ]
 
 MIDDLEWARE = [
