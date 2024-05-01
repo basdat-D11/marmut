@@ -4,10 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        a + a {
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Register</h1>
-    <a href="{% url 'main:register_user' %}"><button type="button">Pengguna</button></a>
-    <a href="{% url 'main:register_label' %}"><button type="button">Label</button></a>
+    <div class="container">
+        <h1>Register</h1>
+        <a href="{% url 'main:register_user' %}"><button type="button">Pengguna</button></a>
+        <a href="{% url 'main:register_label' %}"><button type="button">Label</button></a>
+    </div>
 </body>
 </html>
