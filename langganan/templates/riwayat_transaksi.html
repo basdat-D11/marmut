@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Riwayat Transaksi Paket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .center {
+            text-align: center;
+        }
+        table {
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .kembali-container {
+            text-align: center; /* Center align the submit link container */
+            margin-top: 20px;
+        }
+        .kembali-link {
+            text-decoration: none;
+            color: blue;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="center">RIWAYAT TRANSAKSI PAKET</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Jenis</th>
+                <th>Tanggal Dimulai</th>
+                <th>Tanggal Berakhir</th>
+                <th>Metode Pembayaran</th>
+                <th>Nominal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in transaksi %}
+            <tr>
+                <td>{{ item.jenis }}</td>
+                <td>{{ item.tanggal_dimulai }}</td>
+                <td>{{ item.tanggal_berakhir }}</td>
+                <td>{{ item.metode_pembayaran }}</td>
+                <td>{{ item.nominal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="kembali-container">
+        <a href="{% url 'langganan:langganan_paket' %}" class="kembali-link">[Kembali]</a>
+    </div>
+</body>
+</html>

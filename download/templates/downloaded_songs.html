@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <title>Daftar Lagu</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            table {
+                width: 60%;
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: center;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .actions a {
+                text-decoration: none;
+                color: blue;
+                margin-right: 10px;
+            }
+            h2 {
+                text-align: center;
+            }
+            .back-button {
+                text-decoration: none;
+                color: blue;
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+            }
+        </style>
+    </head>
+<body>
+    <h2>DAFTAR LAGU</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Judul Lagu</th>
+                <th>Oleh</th>
+                <th>Tanggal Download</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td>{{ song.title }}</td>
+                <td>{{ song.artist }}</td>
+                <td>{{ song.download_date }}</td>
+                <td class="actions">
+                    <a href="#">[Lihat]</a>
+                    <a href="{% url 'download:song_deleted' song.title %}">[Hapus]</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="#" class="back-button">[Kembali]</a>
+</body>
+</html>
