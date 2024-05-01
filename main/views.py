@@ -114,7 +114,7 @@ def cek_artis(email):
         return False
     
 def cek_songwriter(email):
-    query_str = f"SELECT * FROM songwriter WHERE email = '{email}'"
+    query_str = f"SELECT * FROM songwriter WHERE email_akun = '{email}'"
     hasil = query(query_str)
     try:
         if len(hasil) == 1:
@@ -157,11 +157,17 @@ def build_akun(email, role):
     if 'artis' or 'songwriter' in role:
         query_str = f"SELECT * FROM artist WHERE email_akun = '{email}'"
         hasil = query(query_str)
+        query_str = f"SELECT * FROM songwriter WHERE email_akun = '{email}'"
+        hasil2 = query(query_str)
+        print(hasil2)
         id_artis = ''
         id_songwriter = ''
         try:
             id_artis = hasil[0]['id']
-            id_songwriter = hasil[0]['id']
+        except:
+            pass
+        try:
+            id_songwriter = hasil2[0]['id']
         except:
             pass
         #ambil lagu
@@ -174,12 +180,14 @@ def build_akun(email, role):
         except:
             pass
         query_str = f"""SELECT * FROM songwriter_write_song
-                        JOIN SONG ON songwriter_write_song.id_song = song.id_song
+                        JOIN SONG ON songwriter_write_song.id_song = song.id_konten
+                        JOIN KONTEN ON song.id_konten = konten.id
                         WHERE songwriter_write_song.id_songwriter = '{id_songwriter}'"""
         hasil = query(query_str)
+        print(hasil)
         try:
             for lagu in hasil:
-                daftar_lagu.append(lagu['judul'])
+                daftar_lagu.add(lagu['judul'])
         except:
             pass
         daftar_lagu = list(daftar_lagu)

@@ -4,61 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Song Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        /* CSS untuk slider */
-        .slider {
-            width: 300px;
-            margin-top: 20px;
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
-
+        
         .slider-track {
-            width: 100%;
-            height: 5px;
-            background-color: #ddd;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 2px;
             position: relative;
-            border-radius: 5px;
         }
 
         .slider-thumb {
-            width: 20px;
-            height: 20px;
-            background-color: #007bff00;
+            background-color: #2563eb;
             border-radius: 50%;
+            width: 4px;
+            height: 4px;
             position: absolute;
-            top: -8px;
+            top: -1px;
+            cursor: pointer;
         }
     </style>
 </head>
-<body>
-    <h1>Song Detail</h1>
-    <div>
-        <p><strong>Judul:</strong> Song1</p>
-        <p><strong>Genre(s):</strong> -Genre1-Genre2</p>
-        <p><strong>Artist:</strong> Artist1</p>
-        <p><strong>Songwriter(s):</strong> -Songwriter1-Songwriter2</p>
-        <p><strong>Durasi:</strong> 3 menit</p>
-        <p><strong>Tanggal Rilis:</strong> 18/03/24</p>
-        <p><strong>Tahun:</strong> 2024</p>
-        <p><strong>Total Play:</strong> 0</p>
-        <p><strong>Total Downloads:</strong> 0</p>
-        <p><strong>Album:</strong> Album1</p>
-    </div>
-    <div>
-        <!-- Slider -->
-        <div class="slider">
-            <input type="range" min="0" max="100" value="0" class="slider-input">
-            <div class="slider-track"></div>
-            <div class="slider-thumb"></div>
+<body class="bg-gray-100">
+    <div class="max-w-3xl mx-auto py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Song Detail</h1>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <p class="text-gray-600"><strong>Judul:</strong> Song1</p>
+            <div class="genre-songwriter">
+                <p class="text-gray-600"><strong>Genre(s):</strong></p>
+                <p class="text-gray-600">- Genre1</p>
+                <p class="text-gray-600">- Genre2</p>
+            </div>
+            <p class="text-gray-600"><strong>Artist:</strong> Artist1</p>
+            <div class="genre-songwriter">
+                <p class="text-gray-600"><strong>Songwriter(s):</strong></p>
+                <p class="text-gray-600">- Songwriter1</p>
+                <p class="text-gray-600">- Songwriter2</p>
+            </div>
+            <p class="text-gray-600"><strong>Durasi:</strong> 3 menit</p>
+            <p class="text-gray-600"><strong>Tanggal Rilis:</strong> 18/03/24</p>
+            <p class="text-gray-600"><strong>Tahun:</strong> 2024</p>
+            <p class="text-gray-600"><strong>Total Play:</strong> 0</p>
+            <p class="text-gray-600"><strong>Total Downloads:</strong> 0</p>
+            <p class="text-gray-600"><strong>Album:</strong> Album1</p>
+        </div>
+        <div class="mt-8">
+            <div class="slider w-full">
+                <input type="range" min="0" max="100" value="0" class="slider-input w-full">
+                <div class="slider-track">
+                    <div class="slider-thumb"></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 flex justify-center">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Play</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Add to Playlist</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">Download</button>
+            <a href="#" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Kembali</a>
         </div>
     </div>
-    <div>
-        <button>Play</button>
-        <button>Add to Playlist</button>
-        <button>Download</button>
-        <a href="#">Kembali</a>
-    </div>
 
-    <!-- JavaScript untuk mengatur pergerakan slider thumb -->
     <script>
         var slider = document.querySelector('.slider');
         var sliderInput = slider.querySelector('.slider-input');
