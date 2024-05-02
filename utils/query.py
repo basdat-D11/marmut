@@ -11,7 +11,6 @@ try:
                         host="aws-0-ap-southeast-1.pooler.supabase.com",
                         port="5432",
                         database="postgres")
-
     # Create a cursor to perform database operations
     connection.autocommit = True
     cursor = connection.cursor()
