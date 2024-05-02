@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'langganan',
     'download',
     'search',
+    'album',
+    'royalti',
 ]
 
 MIDDLEWARE = [
