@@ -5,6 +5,7 @@ from utils.query import query
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from datetime import datetime, timedelta
 
 
 def home(request):
@@ -67,6 +68,7 @@ def login(request):
         else:
             akun['gender'] = 'Perempuan'
         request.session['akun'] = akun
+        request.session.set_expiry(3600)
         return HttpResponseRedirect(reverse('main:dashboard'))
 
     else:
