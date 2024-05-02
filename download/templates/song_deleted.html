@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Lagu Dihapus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .message-box {
+            border: 1px solid #000;
+            padding: 20px;
+            margin: auto;
+            width: 50%;
+        }
+        .back-button {
+                text-decoration: none;
+                color: blue;
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+            }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        <p>Berhasil menghapus Lagu dengan judul '{{ song_title }}' dari daftar unduhan!</p>
+        <a href="{% url 'download:downloaded_songs' %}" class="back-button">[KEMBALI]</a>
+    </div>
+</body>
+</html>

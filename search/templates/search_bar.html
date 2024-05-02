@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Bar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 2vh; /* Adjusted to full viewport height for vertical centering */
+        }
+        .search-container {
+            border: 1px solid #000;
+            padding: 20px;
+            text-align: center;
+            width: fit-content; /* Adjust width to fit content */
+        }
+        .search-bar {
+            margin-bottom: 10px; /* Add space below the search bar */
+        }
+        .search-bar label {
+            margin-right: 10px;
+        }
+        .search-bar input[type="text"] {
+            margin-right: 10px;
+        }
+        .search-title {
+            font-weight: bold;
+            margin-bottom: 10px; /* Add space below the title */
+        }
+        .search-link {
+            color: blue; /* Style the search link in blue */
+            text-decoration: none; /* Remove underline from the link */
+            cursor: pointer; /* Change cursor to pointer when hovering over the link */
+        }
+        /* Remove styles related to the submit button since it's no longer needed */
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-title">SEARCH BAR</div>
+        <div class="search-bar">
+            <!-- Ensure the form action points to the 'search_results' named URL -->
+            <form action="{% url 'search:search_results' %}" method="get">
+                <label for="query">Query:</label>
+                <input type="text" id="query" name="query" placeholder="Search...">
+            </form>
+        </div>
+        <!-- The "CARI" text is a clickable link that submits the form -->
+        <a href="#" onclick="document.forms[0].submit(); return false;" class="search-link">[CARI]</a>
+    </div>
+</body>
+</html>

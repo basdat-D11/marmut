@@ -4,26 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Tambahkan link CSS untuk Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Tambahkan link CSS untuk Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    </style>
 </head>
-<body>
-    <h1>Dashboard</h1>
-    <p>Nama: {{ nama }}</p>
-    <p>Email: {{ email }}</p>
-    <p>Kontak: {{ kontak }}</p>
-
-    <!-- Tampilkan informasi sesuai dengan role -->
-
-        <!-- Tampilkan daftar playlist -->
-    <h2>Daftar Album</h2>
-    {% if album %}
-        <ul>
-            {% for album in album %}
-                <li>{{ album }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Belum Memiliki Album</p>
-    {% endif %}
-
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
+                <!-- Informasi pengguna -->
+                <div class="mb-4">
+                    <p class="text-lg font-semibold">Informasi Pengguna</p>
+                    <div class="grid grid-cols-2 gap-1">
+                        <div class="flex items-center">
+                            <i class="fas fa-user text-gray-500 mr-2"></i>
+                            <p class="text-gray-700">{{ nama }}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-gray-500 mr-2"></i>
+                            <p class="text-gray-700">{{ email }}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-gray-500 mr-2"></i>
+                            <p class="text-gray-700">{{ kontak }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tampilkan daftar album -->
+                <div class="mb-4">
+                    <h2 class="text-lg font-semibold">Daftar Album</h2>
+                    {% if album %}
+                        <ul class="list-disc pl-6">
+                            {% for album in album %}
+                                <li class="text-gray-700">{{ album }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-gray-700">Belum Memiliki Album</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

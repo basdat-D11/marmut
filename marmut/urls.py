@@ -22,4 +22,9 @@ urlpatterns = [
     path('' , include('tesapp.urls')),
     path('main/' , include('main.urls')),
     path('playlist/' , include('playlist.urls')),
+    path('langganan/' , include('langganan.urls')),
+    path('download/' , include('download.urls')),
+    path('search/' , include('search.urls')),
+    path('album/', include('album.urls')),
+    path('royalti/', include('royalti.urls'))
 ]

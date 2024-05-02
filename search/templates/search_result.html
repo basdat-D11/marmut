@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hasil Pencarian</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .search-container {
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #000;
+            width: 80%;
+            box-sizing: border-box;
+        }
+        .search-title {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .search-results {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <!-- Updated part: Displaying search results title with the searched term -->
+        <div class="search-title">Hasil Pencarian "{{ query }}"</div>
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tipe</th>
+                        <th>Judul</th>
+                        <th>Oleh</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        <tr>
+                            <td>{{ result.type }}</td>
+                            <td>{{ result.title }}</td>
+                            <td>{{ result.by }}</td>
+                            <td><a href="#">Lihat</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p> Maaf, pencarian untuk "{{ query }}" tidak ditemukan</p>
+        {% endif %}
+    </div>
+</body>
+</html>

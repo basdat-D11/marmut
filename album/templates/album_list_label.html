@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Statistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            margin: auto;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #cbd5e0;
+        }
+
+        th {
+            background-color: #4299e1;
+            color: #ffffff;
+        }
+
+        tr:hover {
+            background-color: #e2e8f0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .action-buttons button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center; /* Text di tengah tombol */
+        }
+
+        .action-buttons button.song-list {
+            background-color: #6879E2; /* Warna biru */
+            color: white;
+        }
+        
+        .action-buttons button.add {
+            background-color: #754DA4; /* Warna merah */
+            color: white;
+        } 
+
+        .action-buttons button.delete {
+            background-color: #e53e3e; /* Warna merah */
+            color: white;
+        } 
+
+        .action-buttons button:hover {
+            filter: brightness(0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="4">Daftar Album</th>
+                </tr>
+                <tr>
+                    <th>Judul</th>
+                    <th>Jumlah Lagu</th>
+                    <th>Total Durasi (menit)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for album in albums %}
+                <tr>
+                    <td>{{ album.judul }}</td>
+                    <td>{{ album.jumlah_lagu }}</td>
+                    <td>{{ album.total_durasi }}</td>
+                    <td class="action-buttons">
+                        <button class="song-list" onclick="showDetail('{{ album.id }}')">Lihat Daftar Lagu</button>
+                        <button class="delete" onclick="deleteSong('{{ album.id }}')">Hapus</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function showDetail(id) {
+            var url = "/album/" + id + "/list-song";
+            window.location.href = url;
+        }
+
+        function addSong(id) {
+            var url = "/album/" + id + "/add-song";
+            window.location.href = url;
+        }
+
+        function deleteSong(id) {
+            var url = "/album";
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
