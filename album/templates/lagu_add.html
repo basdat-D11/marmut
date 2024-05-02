@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Album Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            margin: auto;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            width: 100%;
+            max-width: 28rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            padding: 1.5rem;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #000000; /* changed to black */
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            border: 1px solid #cbd5e0;
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+            box-sizing: border-box; /* Penambahan ini untuk memastikan ukuran input sesuai dengan width form */
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #4299e1;
+        }
+
+        input[type="submit"] {
+            background-color: #715AB7;
+            color: #ffffff;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block; /* Membuat tombol submit menjadi full width */
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3e2a7a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="{% url 'album:tambah_lagu' id=album.id %}" method="post">
+            <label for="album">Album:</label> Album1
+
+            <label for="judul">Judul:</label>
+            <input type="text" id="judul" name="judul" required>
+
+            <label for="artist">Artist:</label>
+            {% if user_logged_in == "Artist" %}
+                <input type="text" id="artist" name="artist" value="{{ user_logged_in }}" readonly>
+            {% else %}
+                <select id="artist" name="artist">
+                    <option value="">Pilih Artist</option>
+                    {% for artist in artists %}
+                        <option value="{{ artist }}">{{ artist }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+            <label for="songwriter">Songwriter:</label>
+            <select id="songwriter" name="songwriter" multiple>
+                {% for songwriter in songwriters %}
+                    <option value="{{ songwriter }}">{{ songwriter }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="genre">Genre:</label>
+            <select id="genre" name="genre" multiple>
+                {% for genre in genres %}
+                    <option value="{{ genre }}">{{ genre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="durasi">Durasi:</label>
+            <input type="text" id="durasi" name="durasi" required>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
