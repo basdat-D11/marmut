@@ -1,28 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Hasil Pencarian</title>
+    <!-- Tambahkan link CSS untuk Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
         .search-container {
-            text-align: center;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #000;
-            width: 80%;
-            box-sizing: border-box;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: fit-content;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .search-title {
+            color: #667eea;
             font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .search-results {
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
         table {
             width: 100%;
@@ -30,18 +29,18 @@
             margin-top: 20px;
         }
         th, td {
-            border: 1px solid black;
+            border: 1px solid #e2e8f0; /* Light gray border */
             padding: 8px;
-            text-align: center;
+            text-align: left; /* Align text to the left */
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #ebf4ff; /* Light blue background */
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f7fafc; /* Lighter gray background for even rows */
         }
         a {
-            color: blue;
+            color: #667eea; /* Match the color scheme of the dashboard */
             text-decoration: none;
         }
         a:hover {
@@ -49,33 +48,33 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-purple-400 flex items-center justify-center h-screen">
     <div class="search-container">
         <!-- Updated part: Displaying search results title with the searched term -->
         <div class="search-title">Hasil Pencarian "{{ query }}"</div>
         {% if results %}
-            <table>
+            <table class="min-w-full divide-y divide-gray-200">
                 <thead>
-                    <tr>
-                        <th>Tipe</th>
-                        <th>Judul</th>
-                        <th>Oleh</th>
-                        <th>Actions</th>
+                    <tr class="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-3">Tipe</th>
+                        <th class="px-6 py-3">Judul</th>
+                        <th class="px-6 py-3">Oleh</th>
+                        <th class="px-6 py-3">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     {% for result in results %}
                         <tr>
-                            <td>{{ result.type }}</td>
-                            <td>{{ result.title }}</td>
-                            <td>{{ result.by }}</td>
-                            <td><a href="#">Lihat</a></td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ result.type }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ result.title }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ result.by }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap"><a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p> Maaf, pencarian untuk "{{ query }}" tidak ditemukan</p>
+            <p class="text-sm text-gray-600">Maaf, pencarian untuk "{{ query }}" tidak ditemukan.</p>
         {% endif %}
     </div>
 </body>
