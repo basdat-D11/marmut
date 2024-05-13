@@ -3,48 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Playlist</title>
+    <title> </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    </style>
 </head>
-<body>
-    <h1>User Playlist</h1>
-    
-    <!-- Jika tidak ada playlist -->
-    {% if not playlist %}
-        <h2>Anda Belum Memiliki Playlist</h2>
-        <a href="#">[Tambah Playlist]</a>
-    <!-- Jika ada playlist -->
-    {% else %}
-        <h2>Daftar Playlist</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Judul</th>
-                    <th>Jumlah Lagu</th>
-                    <th>Total Durasi</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Loop untuk setiap playlist -->
-                {% for playlist in playlist %}
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold mb-6">User Playlist Detail</h1>
+        
+        <!-- If no playlist -->
+        {% if not playlist %}
+            <h2 class="text-xl mb-4">Anda Belum Memiliki Playlist <i class="far fa-sad-tear"></i></h2>
+            <a href="#" class="text-yellow-500 hover:underline"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
+        
+        <!-- If there are playlists -->
+        {% else %}
+            <h2 class="text-xl mb-4">Daftar Playlist</h2>
+            <table class="w-full bg-white rounded-md shadow-md">
+                <thead class="bg-gray-800 text-white">
                     <tr>
-                        <td>{{ playlist.judul }}</td>
-                        <td>{{ playlist.jumlah_lagu }}</td>
-                        <td>{{ playlist.total_durasi }} menit</td>
-                        <td>
-                            <form action="{% url 'playlist:detail' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
-                                <button type="submit">Detail</button>
-                            </form>
-                            <a href="#">[Ubah]</a>
-                            <a href="#">[Hapus]</a>
-                        </td>
+                        <th class="px-6 py-4">Judul</th>
+                        <th class="px-6 py-4">Jumlah Lagu</th>
+                        <th class="px-6 py-4">Total Durasi</th>
+                        <th class="px-6 py-4">Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="#">[Tambah Playlist]</a>
-    {% endif %}
+                </thead>
+                <tbody>
+                    <!-- Loop through each playlist -->
+                    {% for playlist in playlist %}
+                        <tr>
+                            <td class="px-6 py-4">{{ playlist.judul }}</td>
+                            <td class="px-6 py-4">{{ playlist.jumlah_lagu }}</td>
+                            <td class="px-6 py-4">{{ playlist.total_durasi }} menit</td>
+                            <td class="px-6 py-4">
+                                <form action="{% url 'playlist:play_playlist' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
+                                    <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Detail</button>
+                                </form>
+                                <form action="{% url 'playlist:detail' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
+                                    <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Ubah</button>
+                                </form>
+                                <a href="#" class="text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="#" class="text-blue-500 hover:underline mt-4"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
+        {% endif %}
+    </div>
 </body>
 </html>

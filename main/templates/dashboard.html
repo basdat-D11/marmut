@@ -4,57 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <!-- Tambahkan link CSS untuk Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Tambahkan link CSS untuk Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+    body {
+        background: linear-gradient(to right, #667eea, #764ba2);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+    </style>
 </head>
-<body>
-    <h1>Dashboard</h1>
-    <p>Nama: {{ nama }}</p>
-    <p>Email: {{ email }}</p>
-    <p>Kota: {{ kota }}</p>
-    <p>Gender: {{ gender }}</p>
-    <p>Tempat lahir: {{ tpt_lahir }}</p>
-    <p>Tanggal lahir: {{ tgl_lahir }}</p>
-    <p>Role: {{ role }}</p>
-    <!-- Tampilkan informasi sesuai dengan role -->
-
-        <!-- Tampilkan daftar playlist -->
-    {% if role == 'Pengguna Biasa' %}
-    <h2>Daftar Playlist</h2>
-        {% if playlist %}
-            <ul>
-                {% for playlist in playlist %}
-                    <li>{{ playlist }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Belum Memiliki Playlist</p>
+<body class="bg-gray-100">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+        <!-- Informasi pengguna -->
+        <div class="mb-6">
+            <p class="text-lg font-semibold">Informasi Pengguna</p>
+            <div class="flex flex-wrap">
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-user mr-2"></i>Nama: {{ nama }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-envelope mr-2"></i>Email: {{ email }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-map-marker-alt mr-2"></i>Kota: {{ kota }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-venus-mars mr-2"></i>Gender: {{ gender }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-birthday-cake mr-2"></i>Tempat lahir: {{ tpt_lahir }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-calendar-alt mr-2"></i>Tanggal lahir: {{ tgl_lahir }}</p>
+                </div>
+                <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                    <p class="text-gray-700"><i class="fas fa-user-tag mr-2"></i>Role: {{ role }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tampilkan daftar playlist, lagu, atau podcast sesuai dengan role -->
+        {% if role == 'Pengguna Biasa' %}
+            <div class="mb-6">
+                <p class="text-lg font-semibold">Daftar Playlist</p>
+                {% if playlist %}
+                    <ul class="list-disc pl-6">
+                        {% for playlist in playlist %}
+                            <li class="text-gray-700">{{ playlist }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-700">Belum Memiliki Playlist</p>
+                {% endif %}
+            </div>
         {% endif %}
-    {% endif %}
-    {% if 'artis' in role or 'songwriter' in role %}
-        <!-- Tampilkan daftar lagu -->
-        <h2>Daftar Lagu</h2>
-        {% if lagu %}
-            <ul>
-                {% for lagu in lagu %}
-                    <li>{{ lagu }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Belum Memiliki Lagu</p>
+        
+        {% if 'artis' in role or 'songwriter' in role %}
+            <div class="mb-6">
+                <p class="text-lg font-semibold">Daftar Lagu</p>
+                {% if lagu %}
+                    <ul class="list-disc pl-6">
+                        {% for lagu in lagu %}
+                            <li class="text-gray-700">{{ lagu }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-700">Belum Memiliki Lagu</p>
+                {% endif %}
+            </div>
         {% endif %}
-    {% endif %}
-
-    {% if 'podcaster' in role %}
-        <!-- Tampilkan daftar podcast -->
-        <h2>Daftar Podcast</h2>
-        {% if podcast %}
-            <ul>
-                {% for podcast in podcast %}
-                    <li>{{ podcast }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Belum Memiliki Podcast</p>
+        
+        {% if 'podcaster' in role %}
+            <div class="mb-6">
+                <p class="text-lg font-semibold">Daftar Podcast</p>
+                {% if podcast %}
+                    <ul class="list-disc pl-6">
+                        {% for podcast in podcast %}
+                            <li class="text-gray-700">{{ podcast }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-gray-700">Belum Memiliki Podcast</p>
+                {% endif %}
+            </div>
         {% endif %}
-    {% endif %}
+    </div>
 </body>
 </html>
