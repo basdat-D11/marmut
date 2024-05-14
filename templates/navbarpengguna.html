@@ -34,11 +34,18 @@
     <a href="#">Search Bar</a>
     <a href="#">Kelola Playlist</a>
     <a href="#">Langganan Paket</a>
-    <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
-    <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
-    <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
-    <a href="#">Kelola Album</a><!-- Hanya untuk Label -->
-    <a href="#">Cek Royalti</a>><!-- Hanya untuk Artist/Songwriter/label -->
+    {% if premium %}
+        <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+    {% endif %}
+
+    {% if 'podcaster' in role %}
+        <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+    {% endif %}
+
+    {% if 'artis' in role or 'songwriter' in role %}
+        <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+        <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+    {% endif %}
     <a href="#">Logout</a>
 </div>
 

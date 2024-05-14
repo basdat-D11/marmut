@@ -76,14 +76,14 @@
 <body>
     <div class="container">
         <h1>Edit Playlist</h1>
-        <form action="#" method="post">
+        <form action="{% url 'playlist:edit_playlist' item_uuid=playlist.id_user_playlist %}" method="post">
             <div class="form-group">
                 <label for="judul">Judul:</label>
-                <input type="text" id="judul" name="judul" value="Playlist1" required>
+                <input type="text" id="judul" name="judul" value="{{ playlist.judul }}" required>
             </div>
             <div class="form-group">
                 <label for="deskripsi">Deskripsi:</label>
-                <textarea id="deskripsi" name="deskripsi" rows="4" required>Deskripsi dummy playlist1</textarea>
+                <textarea id="deskripsi" name="deskripsi" rows="4" required>{{ playlist.deskripsi }}</textarea>
             </div>
             <button type="submit" class="submit-btn">Submit</button>
         </form>

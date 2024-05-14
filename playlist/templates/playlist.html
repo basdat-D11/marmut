@@ -51,12 +51,12 @@
                             <td class="px-6 py-4">{{ playlist.jumlah_lagu }}</td>
                             <td class="px-6 py-4">{{ playlist.total_durasi }} menit</td>
                             <td class="px-6 py-4">
-                                <form action="{% url 'playlist:play_playlist' %}" method="POST">
+                                <form action="{% url 'playlist:detail' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
                                     <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Detail</button>
                                 </form>
-                                <form action="{% url 'playlist:detail' %}" method="POST">
+                                <form action="{% url 'playlist:show_edit_playlist' item_uuid=playlist.id_user_playlist %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
                                     <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Ubah</button>
@@ -67,7 +67,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="#" class="text-blue-500 hover:underline mt-4"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
+            <a href="{% url 'playlist:add_playlist' %}" class="text-yellow-500 hover:underline mt-4"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
         {% endif %}
     </div>
 </body>

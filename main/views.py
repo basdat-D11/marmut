@@ -45,6 +45,16 @@ def login(request):
         #ubah date ke string
         akun['tgl_lahir'] = hasil[0]['tanggal_lahir'].strftime('%Y-%m-%d')
         akun['role'] = role
+
+        query_new = f"SELECT * FROM premium WHERE email = '{email}'"
+        prem = query(query_new)
+
+        if len(prem) == 1:
+            akun['premium'] = True
+        else:
+            akun['premium'] = False
+
+        print(akun)
     
         query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
         hasil = query(query_str)
@@ -68,7 +78,7 @@ def login(request):
         else:
             akun['gender'] = 'Perempuan'
         request.session['akun'] = akun
-        request.session.set_expiry(3600)
+        request.session.set_expiry(36000)
         return HttpResponseRedirect(reverse('main:dashboard'))
 
     else:
@@ -100,6 +110,7 @@ def to_dashboard(request):
             role = akun['kontak']
             return render(request, 'dasboard_label.html', akun)
         except:
+            print(akun)
             return render(request, 'dashboard.html', akun)
     else:
         return redirect(reverse('main:page_login'))
