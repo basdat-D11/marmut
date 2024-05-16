@@ -3,31 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Lagu Dihapus</title>
+    <!-- Tambahkan link CSS untuk Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
         }
         .message-box {
-            border: 1px solid #000;
-            padding: 20px;
-            margin: auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             width: 50%;
+            max-width: 600px;
+            color: black;
+            text-align: center; /* Center text */
+        }
+        .song-title {
+            font-weight: bold; /* Make text bold */
         }
         .back-button {
-                text-decoration: none;
-                color: blue;
-                display: block;
-                margin: 20px auto;
-                text-align: center;
-            }
+            background: black;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="message-box">
-        <p>Berhasil menghapus Lagu dengan judul '{{ song_title }}' dari daftar unduhan!</p>
-        <a href="{% url 'download:downloaded_songs' %}" class="back-button">[KEMBALI]</a>
+        <p>Berhasil menghapus Lagu dengan judul <span class="song-title">{{ song_title }}</span> dari daftar unduhan!</p>
+        <div class="flex justify-center mt-4">
+            <a href="{% url 'download:downloaded_songs' %}" class="back-button">Kembali</a>
+        </div>
     </div>
 </body>
 </html>
