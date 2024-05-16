@@ -7,18 +7,61 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <style>
-        body {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #667eea, #764ba2);
+    }
+
+    .navbar {
+        background-color: #333;
+        overflow: hidden;
+    }
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+
+    .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .content {
+        padding: 20px;
+    }
     </style>
 </head>
-<body class="bg-gray-100">
+<body>
+    <div class="navbar">
+        <a href="">Dashboard</a>
+        <a href="#">Chart</a>
+        <a href="#">Search Bar</a>
+        <a href="#">Kelola Playlist</a>
+        <a href="#">Langganan Paket</a>
+        {% if akun.premium %}
+            <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+        {% endif %}
+
+        {% if 'podcaster' in akun.role %}
+            <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
+
+        {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+            <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="#">Logout</a>
+    </div>
+
+<div class="content">
+    
     <div class="container mx-auto py-8">
         <h1 class="text-3xl font-bold mb-8 text-center">User Playlist Detail</h1>
         
@@ -56,8 +99,8 @@
                 </div>
             </div>
             <div class="flex justify-end">
-                <a href="#" class="btn btn-blue mr-2"><i class="fas fa-random mr-1"></i> Shuffle Play</a>
-                <a href="#" class="btn btn-gray"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
+                <a href="#" onclick="shufflePlay('{{ playlist.id_playlist }}', event)" class="btn btn-blue mr-2"><i class="fas fa-random mr-1"></i> Shuffle Play</a>
+                <a href="{% url 'playlist:show_playlist' %}" class="btn btn-gray"><i class="fas fa-arrow-left mr-1"></i> Kembali</a>
             </div>
         </div>
         
@@ -80,16 +123,50 @@
                             <td class="px-6 py-4">{{ lagu.oleh }}</td>
                             <td class="px-6 py-4">{{ lagu.durasi }}</td>
                             <td class="px-6 py-4 flex justify-center space-x-4">
-                                <a href="#" class="text-blue-500 hover:underline mr-2"><i class="fas fa-eye"></i> Lihat</a>
-                                <a href="#" class="text-green-500 hover:underline mr-2"><i class="fas fa-play"></i> Play</a>
+                                <a href="{% url 'playlist:play_song' item_uuid=lagu.id %}" class="text-blue-500 hover:underline mr-2"><i class="fas fa-eye"></i> Lihat</a>
+                                <a href="#" onclick="playSong('{{ lagu.id }}', event)" class="text-green-500 hover:underline mr-2"><i class="fas fa-play"></i> Play</a>
                                 <a href="#" class="text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="#" class="btn btn-blue mt-4"><i class="fas fa-plus mr-1"></i> Tambah Lagu</a>
+            <a href="{% url 'playlist:show_add_song' item_uuid=playlist.id_user_playlist %}" class="btn btn-yellow mt-4"><i class="fas fa-plus mr-1"></i>Tambah Lagu</a>
         </div>
     </div>
+</div>
 </body>
+
+<script>
+
+    function shufflePlay(id_playlist) {
+        fetch("{% url 'playlist:shuffle_play' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id_playlist: id_playlist
+            })
+        })
+        console.log(id_playlist)
+    }
+
+    function playSong(id_lagu, event) {
+        event.preventDefault()
+        fetch("{% url 'playlist:playsong' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id_lagu: id_lagu
+            })
+        })
+        console.log(id_lagu)
+    }
+
+
+</script>
+
 </html>

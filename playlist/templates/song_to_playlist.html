@@ -15,13 +15,33 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <style>
         body {
-            background: linear-gradient(to right, #667eea, #764ba2);
             font-family: Arial, sans-serif;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            padding: 0;
+            background: linear-gradient(to right, #667eea, #764ba2);
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .content {
+            padding: 20px;
         }
 
         .container {
@@ -112,27 +132,57 @@
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="">Dashboard</a>
+        <a href="#">Chart</a>
+        <a href="#">Search Bar</a>
+        <a href="#">Kelola Playlist</a>
+        <a href="#">Langganan Paket</a>
+        {% if akun.premium %}
+            <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+        {% endif %}
+
+        {% if 'podcaster' in akun.role %}
+            <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
+
+        {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+            <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="#">Logout</a>
+    </div>
+
+<div class="content">
+
     <div class="container">
         <div class="card">
             <h1 class="title">Add Song to User Playlist</h1>
             <div class="mb-4">
-                <p class="subtitle"><i class="fas fa-music icon"></i><strong>Title:</strong> Song1</p>
-                <p class="subtitle"><i class="fas fa-user icon"></i><strong>Artist:</strong> Artist1</p>
+                <p class="subtitle"><i class="fas fa-music icon"></i><strong>Title:</strong>{{ lagu.judul }}</p>
+                <p class="subtitle"><i class="fas fa-user icon"></i><strong>Artist:</strong>{{ lagu.nama }}</p>
             </div>
-            <div class="mb-4">
-                <label for="playlist" class="label">Playlist:</label>
-                <select id="playlist" class="select">
-                    <option value="">Select playlist</option>
-                    <option value="playlist1">Playlist 1</option>
-                    <option value="playlist2">Playlist 2</option>
-                    <option value="playlist3">Playlist 3</option>
-                </select>
-            </div>
-            <div class="button-container">
-                <button class="custom-button add-button">Add</button>
-                <button class="custom-button back-button">Back</button>
-            </div>
+            <form action="{% url 'playlist:complete_add_song' item_uuid=lagu.id %}" method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="playlist" class="label">Playlist:</label>
+                    <select id="playlist" name="playlist" class="select">
+                        <option value="">Select playlist</option>
+                        {% for playlist in playlist %}
+                            <option value="{{ playlist.id_user_playlist }}">{{ playlist.judul }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="custom-button add-button">Add</button>
+                    <button type="button" class="custom-button back-button" onclick="window.history.back();">Back</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+<script>
+    
+</script>
 </body>
 </html>
