@@ -29,7 +29,7 @@
         <!-- If no playlist -->
         {% if not playlist %}
             <h2 class="text-xl mb-4">Anda Belum Memiliki Playlist <i class="far fa-sad-tear"></i></h2>
-            <a href="#" class="text-yellow-500 hover:underline"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
+            <a href="{% url 'playlist:add_playlist' %}" class="text-yellow-500 hover:underline"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
         
         <!-- If there are playlists -->
         {% else %}
