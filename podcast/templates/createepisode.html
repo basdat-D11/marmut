@@ -1,0 +1,67 @@
+<!DOCTYPE html
+><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <title>Create Episode</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #557dff50;
+            color: #000000;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        form {
+            width: 50%;
+            margin: 20px auto;
+        }
+        form input, form select, form button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #2d45ff;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            font-size: 14px;
+            background-color: #6900ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6a00ff63;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Create Episode</h1>
+
+<form>
+    <label for="podcast">Podcast:</label>
+    <select id="podcast" name="podcast" required>
+        <option value="Podcast1">Podcast1</option>
+        <option value="Podcast2">Podcast2</option>
+        <!-- podcast lainnya-->
+    </select>
+    <label for="judul_episode">Judul:</label>
+    <input type="text" id="judul_episode" name="judul_episode" required>
+    <label for="deskripsi">Deskripsi:</label
+    ><input type="text" id="deskripsi" name="deskripsi" required>
+    <label for="durasi_episode">Durasi:</label>
+    <input type="text" id="durasi_episode" name="durasi_episode" required>
+    <button type="submit">SUBMIT</button>
+</form>
+
+<button onclick="window.location.href='kelolapodcast.html'">Kembali</button>
+
+</body>
+</html>

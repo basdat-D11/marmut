@@ -5,6 +5,10 @@ from utils.query import query
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from datetime import datetime, timedelta
+
+
+from uuid import uuid4
 
 
 def home(request):
@@ -44,6 +48,18 @@ def login(request):
         #ubah date ke string
         akun['tgl_lahir'] = hasil[0]['tanggal_lahir'].strftime('%Y-%m-%d')
         akun['role'] = role
+
+        query_new = f"SELECT * FROM premium WHERE email = '{email}'"
+        prem = query(query_new)
+
+        if len(prem) == 1:
+            akun['premium'] = True
+        else:
+            akun['premium'] = False
+
+        #print setiap data di akun
+        for key, value in akun.items():
+            print(f"{key} : {value}")
     
         query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
         hasil = query(query_str)
@@ -67,6 +83,8 @@ def login(request):
         else:
             akun['gender'] = 'Perempuan'
         request.session['akun'] = akun
+        request.session.set_expiry(36000)
+        print(akun)
         return HttpResponseRedirect(reverse('main:dashboard'))
 
     else:
@@ -98,6 +116,7 @@ def to_dashboard(request):
             role = akun['kontak']
             return render(request, 'dasboard_label.html', akun)
         except:
+            print(akun)
             return render(request, 'dashboard.html', akun)
     else:
         return redirect(reverse('main:page_login'))
@@ -249,3 +268,44 @@ def register_label(request):
 
 def register(request):
     return render(request, 'register.html')
+
+@csrf_exempt
+def registrasi_pengguna(request):
+    nama = request.POST.get('nama')
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    gender = request.POST.get('gender')
+    if gender == 'laki-laki':
+       gender = 1
+    else:
+       gender = 0
+    kota = request.POST.get('kota-asal')
+    tpt_lahir = request.POST.get('tempat-lahir')
+    tgl_lahir = request.POST.get('tanggal-lahir')
+    role = request.POST.getlist('role')
+    if len(role) == 0:
+        is_verified = False
+    else:
+        is_verified = True
+
+    query_str = f"INSERT INTO akun VALUES ('{email}', '{password}', '{nama}', '{gender}', '{tpt_lahir}', '{tgl_lahir}', '{is_verified}', '{kota}')"
+    hasil = query(query_str)
+    print(hasil)
+    if 'podcaster' in role:
+        query_str = f"INSERT INTO podcaster VALUES ('{email}')"
+        query(query_str)
+    
+
+    id_sw = uuid4()
+    id_phc = uuid4()
+    if 'songwriter' in role:
+        print('masukk')
+        query_str = f"INSERT INTO pemilik_hak_cipta VALUES ('{id_phc}', {int('3000')})"
+        hasil = query(query_str)
+        print(hasil)
+        query_str = f"INSERT INTO songwriter VALUES ('{id_sw}','{email}', '{id_phc}')"
+        hasil = query(query_str)
+        print(hasil)
+    
+
+

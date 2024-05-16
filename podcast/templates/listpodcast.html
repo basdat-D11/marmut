@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <title>List Podcast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #557dff50;
+            color: #000000;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        .podcast-list {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .podcast-list th, .podcast-list td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .podcast-list th {
+            background-color: #6a00ff2f;
+        }
+        .back-button {
+            margin-top: 20px; 
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #6900ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #6a00ff63;
+        }
+    </style>
+</head>
+<body>
+
+<h1>List Podcast</h1>
+
+<div class="container">
+    <table class="podcast-list">
+        <thead>
+            <tr>
+                <th>Judul</th>
+                <th>Jumlah Episode</th>
+                <th>Total Durasi</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Podcast1</td>
+                <td>0</td>
+                <td>0 menit</td>
+                <td class="action-buttons">
+                    <button onclick="window.location.href='daftarepisode.html?podcast=Podcast1'">Lihat Daftar Episode</button>
+                    <button onclick="window.location.href='createepisode.html?podcast=Podcast1'">Tambah Episode</button>
+                    <button onclick="deletePodcast('Podcast1')">Hapus</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Podcast2</td>
+                <td>2</td>
+                <td>4 menit</td>
+                <td class="action-buttons">
+                    <button onclick="window.location.href='daftarepisode.html?podcast=Podcast2'">Lihat Daftar Episode</button>
+                    <button onclick="window.location.href='createepisode.html?podcast=Podcast2'">Tambah Episode</button>
+                    <button onclick="deletePodcast('Podcast2')">Hapus</button>
+                </td>
+            </tr>
+            <!-- podcast lainnya -->
+        </tbody>
+    </table>
+
+    <button class="back-button" onclick="window.location.href='kelolapodcast.html'">Kembali</button>
+</div>
+
+<script>
+    function deletePodcast(podcast) {
+        alert("Deleting podcast: " + podcast);
+    }
+</script>
+
+</body>
+</html>
