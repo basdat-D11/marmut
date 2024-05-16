@@ -4,6 +4,8 @@ certifi
 charset-normalizer
 dj-database-url
 Django
+django
+django-environ
 gunicorn
 idna
 psycopg2-binary
