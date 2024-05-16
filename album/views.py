@@ -1,49 +1,71 @@
 from django.shortcuts import render
+from utils.query import query
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def album_create(request):
-    labels = ['Pilih Label', 'Lanskap', 'Potret', 'Alam', 'Seni']  # List data label
+    query_str = "SELECT nama FROM LABEL"
+    result = query(query_str)
+    print(result)
+    labels = ['Pilih Label'] + [data['nama'] for data in result]
     return render(request, 'album_form.html', {'labels': labels})
 
 def album_list(request):
-    albums = [
-        {'id': 1, 'judul': 'Album 1', 'label': 'Label A', 'jumlah_lagu': 0, 'total_durasi': 0},
-        {'id': 2, 'judul': 'Album 2', 'label': 'Label B', 'jumlah_lagu': 2, 'total_durasi': 4},
-        {'id': 3, 'judul': 'Album 3', 'label': 'Label C', 'jumlah_lagu': 12, 'total_durasi': 52},
-    ]
+    query_str = """SELECT a.id, a.judul, l.nama as label, a.jumlah_lagu, a.total_durasi
+    FROM album as a
+    JOIN label as l ON a.id_label = l.id
+    """
+    result = query(query_str)
 
-    user = "Songwriter"
-    if user != "Label":
-        return render(request, 'album_list.html', {'albums': albums, 'user': user})
+    role = request.session.get('role', None)
+
+    role = "Songwriter"
+    if role != "Label":
+        return render(request, 'album_list.html', {'albums': result, 'role': role})
     else:
-        return render(request, 'album_list_label.html', {'albums': albums, 'user': user})
+        return render(request, 'album_list_label.html', {'albums': result, 'role': role})
 
 @csrf_exempt
 def tambah_lagu(request, id):
-    album = {'id': id, 'judul': 'Album 1', 'label': 'Lanskap', 'jumlah_lagu': 10, 'total_durasi': 45}
+    query_str = f"SELECT * from album WHERE id = '{id}'"
+    album = query(query_str)
+    album['id'] = str(album['id'])
 
-    dummy_artists = ['Artist1', 'Artist2', 'Artist3']
-    dummy_songwriters = ['Songwriter1', 'Songwriter2', 'Songwriter3']
-    dummy_genres = ['Pop', 'Rock', 'Jazz', 'Hip Hop']
+    query_str = """SELECT a.nama
+    FROM akun as a
+    JOIN artist as s ON a.email = s.email_akun
+    """
+    results = query(query_str)
+    artists = [data['nama'] for data in results]
 
-    user_logged_in = request.session.get('user_logged_in', None)
+    query_str = """SELECT a.nama
+    FROM akun as a
+    JOIN songwriter as s ON a.email = s.email_akun
+    """
+    results = query(query_str)
+    songwriters = [data['nama'] for data in results]
+
+    genres = ['Pop', 'Rock', 'Jazz', 'Hip Hop', 'Electronic', 'R&B', 'Country', 'Classical', 'Reggae']
+
+    role = request.session.get('role', None)
 
     return render(request, 'lagu_add.html', {
         'album': album,
-        'user_logged_in': user_logged_in,
-        'artists': dummy_artists,
-        'songwriters': dummy_songwriters,
-        'genres': dummy_genres
+        'user_logged_in': role,
+        'artists': artists,
+        'songwriters': songwriters,
+        'genres': genres
     })
 
 def daftar_lagu(request, id):
-    lagu_dummy = [
-        {'judul': 'Lagu 1', 'durasi': '2', 'total_play': 3, 'total_download': 0},
-        {'judul': 'Lagu 2', 'durasi': '3', 'total_play': 2, 'total_download': 2},
-        {'judul': 'Lagu 3', 'durasi': '2', 'total_play': 8, 'total_download': 6},
-    ]
+    query_str = f"SELECT judul FROM album WHERE id = '{id}'"
+    judul_album = query(query_str)
 
-    album_dummy = {'judul': '1'}
+    query_str = f"""SELECT k.judul, k.durasi, s.total_play, s.total_download
+    FROM konten as k
+    JOIN song as s ON k.id = s.id_konten
+    WHERE id_album = '{id}'
+    """
+    songs = query(query_str)
 
-    return render(request, 'lagu_list.html', {'album': album_dummy, 'songs': lagu_dummy})
+    return render(request, 'lagu_list.html', {'album': judul_album, 'songs': songs})
