@@ -33,41 +33,45 @@
 <body class="bg-purple-400 flex items-center justify-center h-screen">
     <div class="table-container">
         <h2 class="text-3xl font-bold text-center mb-6">DAFTAR LAGU</h2>
-        <table class="min-w-full divide-y divide-gray-200 text-center">
-            <thead>
-                <tr>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Judul Lagu
-                    </th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Oleh
-                    </th>
-                    <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                {% for song in songs %}
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {{ song.title }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {{ song.artist }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900 action-icons">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="{% url 'download:song_deleted' song.title %}" class="text-red-600 hover:text-red-800 action-icons">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% if premium %}
+            <table class="min-w-full divide-y divide-gray-200 text-center">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Judul Lagu
+                        </th>
+                        <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Oleh
+                        </th>
+                        <th class="px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for song in songs %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ song.title }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {{ song.artist }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900 action-icons">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'download:song_deleted' song.title %}" class="text-red-600 hover:text-red-800 action-icons">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center text-xl">Anda tidak dapat menggunakan fitur ini</p>
+        {% endif %}
         <div class="flex justify-center">
             <a href="#" class="back-button">Kembali</a>
         </div>
