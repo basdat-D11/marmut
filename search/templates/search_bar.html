@@ -1,57 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Search Bar</title>
+    <!-- Tambahkan link CSS untuk Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Tambahkan link CSS untuk Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 2vh; /* Adjusted to full viewport height for vertical centering */
-        }
         .search-container {
-            border: 1px solid #000;
-            padding: 20px;
-            text-align: center;
-            width: fit-content; /* Adjust width to fit content */
+            background: linear-gradient(to right, #667eea, #764ba2);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: fit-content;
+            margin: auto;
+            position: relative; /* Added for absolute positioning of the search icon */
         }
-        .search-bar {
-            margin-bottom: 10px; /* Add space below the search bar */
+        .search-input {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px; /* fully rounded */
+            border: none;
+            outline: none;
+            width: 250px; /* fixed width, you can adjust as needed */
+            padding-right: 2.5rem; /* Make room for the search icon inside the input */
         }
-        .search-bar label {
-            margin-right: 10px;
-        }
-        .search-bar input[type="text"] {
-            margin-right: 10px;
+        .search-icon {
+            position: absolute;
+            right: 1rem; /* Adjusted for proper alignment */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Center vertically */
+            color: #667eea;
+            cursor: pointer;
         }
         .search-title {
+            color: white;
             font-weight: bold;
-            margin-bottom: 10px; /* Add space below the title */
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
-        .search-link {
-            color: blue; /* Style the search link in blue */
-            text-decoration: none; /* Remove underline from the link */
-            cursor: pointer; /* Change cursor to pointer when hovering over the link */
+        button.search-icon {
+            background: none; /* Remove default button background */
+            border: none; /* Remove default button border */
+            padding: 0; /* Remove default button padding */
         }
-        /* Remove styles related to the submit button since it's no longer needed */
     </style>
 </head>
-<body>
+<body class="bg-purple-400 flex items-center justify-center h-screen">
     <div class="search-container">
-        <div class="search-title">SEARCH BAR</div>
-        <div class="search-bar">
-            <!-- Ensure the form action points to the 'search_results' named URL -->
-            <form action="{% url 'search:search_results' %}" method="get">
-                <label for="query">Query:</label>
-                <input type="text" id="query" name="query" placeholder="Search...">
-            </form>
-        </div>
-        <!-- The "CARI" text is a clickable link that submits the form -->
-        <a href="#" onclick="document.forms[0].submit(); return false;" class="search-link">[CARI]</a>
+        <div class="search-title">Search Box</div>
+        <form action="{% url 'search:search_results' %}" method="get" class="relative">
+            <input type="text" id="query" name="query" placeholder="Search..." class="search-input">
+            <button type="submit" class="search-icon">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
     </div>
+    <!-- Tambahkan link JS untuk Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>
