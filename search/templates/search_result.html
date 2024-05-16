@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Hasil Pencarian</title>
-    <!-- Tambahkan link CSS untuk Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         .search-container {
             background: white;
@@ -16,42 +16,80 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-around; /* Adjusted for better spacing */
         }
         .search-title {
             color: #667eea;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-top: 20px; /* Increased margin-top */
+            margin-bottom: 20px; /* Increased margin-bottom */
             font-size: 1.5rem;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 20px; /* Adjusted margin-top */
         }
         th, td {
-            border: 1px solid #e2e8f0; /* Light gray border */
+            border: 1px solid #e2e8f0;
             padding: 8px;
-            text-align: left; /* Align text to the left */
+            text-align: left;
         }
         th {
-            background-color: #ebf4ff; /* Light blue background */
+            background-color: #ebf4ff;
         }
         tr:nth-child(even) {
-            background-color: #f7fafc; /* Lighter gray background for even rows */
+            background-color: #f7fafc;
         }
         a {
-            color: #667eea; /* Match the color scheme of the dashboard */
+            color: #667eea;
             text-decoration: none;
         }
         a:hover {
             text-decoration: underline;
         }
+        .search-input {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            outline: none;
+            width: 250px;
+            padding-right: 2.5rem;
+            background-color: #f0f0f0;
+        }
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            cursor: pointer;
+        }
+        button.search-icon {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .back-button {
+            background: black;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body class="bg-purple-400 flex items-center justify-center h-screen">
     <div class="search-container">
-        <!-- Updated part: Displaying search results title with the searched term -->
-        <div class="search-title">Hasil Pencarian "{{ query }}"</div>
+        <form action="{% url 'search:search_results' %}" method="get" class="relative">
+            <input type="text" id="search" name="search" placeholder="Search..." class="search-input">
+            <button type="submit" class="search-icon">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+        <div class="search-title">Hasil Pencarian "{{ search }}"</div>
         {% if results %}
             <table class="min-w-full divide-y divide-gray-200">
                 <thead>
@@ -65,17 +103,21 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     {% for result in results %}
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.type }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ result.contenttype }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ result.title }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.by }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ result.creatorname }}</td>
                             <td class="px-6 py-4 whitespace-nowrap"><a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p class="text-sm text-gray-600">Maaf, pencarian untuk "{{ query }}" tidak ditemukan.</p>
+            <p class="text-sm text-gray-600">Maaf, pencarian untuk "{{ search }}" tidak ditemukan.</p>
         {% endif %}
+        <div class="flex justify-center mt-4">
+            <a href="{% url 'search:search_bar' %}" class="back-button">Kembali</a>
+        </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>
