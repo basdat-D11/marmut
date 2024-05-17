@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Riwayat Transaksi Paket</title>
-    <!-- Tambahkan link CSS untuk Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .table-container {
@@ -13,20 +12,21 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .kembali-link {
-            background: black; /* Changed background color to black */
-            color: white; /* Changed text color to white */
+            background: black;
+            color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
-            text-decoration: none; /* Remove underline from link */
-            display: inline-block; /* Center the button */
+            text-decoration: none;
+            display: inline-block;
             margin-top: 1rem;
-            font-weight: bold; /* Optional: make the text bold */
+            font-weight: bold;
         }
     </style>
 </head>
 <body class="bg-purple-400 flex items-center justify-center h-screen">
     <div class="table-container">
         <h2 class="text-3xl font-bold text-center mb-6">RIWAYAT TRANSAKSI PAKET</h2>
+        {% if transaksi %}
         <table class="min-w-full divide-y divide-gray-200 text-center">
             <thead>
                 <tr class="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -41,14 +41,17 @@
                 {% for item in transaksi %}
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.jenis }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tanggal_dimulai }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tanggal_berakhir }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tanggal_dimulai|date:"j F Y, H:i" }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ item.tanggal_berakhir|date:"j F Y, H:i" }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.metode_pembayaran }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.nominal }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p class="text-center text-gray-700 font-bold">Tidak ada riwayat transaksi</p>
+        {% endif %}
         <div class="flex justify-center mt-4">
             <a href="{% url 'langganan:langganan_paket' %}" class="kembali-link">Kembali</a>
         </div>

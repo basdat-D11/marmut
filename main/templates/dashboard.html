@@ -40,8 +40,9 @@
 </head>
 <body>
     <div class="navbar">
+
     <a href="{% url 'main:dashboard' %}">Dashboard</a>
-        <a href="#">Chart</a>
+        <a href="{% url 'chart:lihat_chart' %}">Chart</a>
         <a href="#">Search Bar</a>
         <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
         <a href="#">Langganan Paket</a>
@@ -50,7 +51,7 @@
         {% endif %}
 
         {% if 'podcaster' in role %}
-            <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
         {% endif %}
 
         {% if 'artis' in role or 'songwriter' in role %}
