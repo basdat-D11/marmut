@@ -13,5 +13,6 @@ urlpatterns = [
     path('register_label', register_label, name='register_label'),
     path('register', register, name='register'),
     path('registrasi_pengguna' , registrasi_pengguna, name='registrasi_pengguna'),
+    path('registrasi_label' , registrasi_label, name='registrasi_label'),
     path('logout', logout, name='logout')
 ]

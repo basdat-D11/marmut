@@ -259,14 +259,7 @@ def shuffle(request):
 
     query_str = f"""insert into akun_play_user_playlist(email_pemain, id_user_playlist, waktu, email_pembuat) values ('{email}', '{id_userp}', '{time}', '{pembuat}')"""
     hasil = query(query_str)
-
-    print(hasil)
-
-    for a in hasild:
-        lagu = a['id_song']
-        query_str = f"""update song set total_play = total_play + 1 where id_konten = '{lagu}'"""
-        query(query_str)
-
+    
     if isinstance(hasil, int):
         return HttpResponse('berhasil')
     else:
