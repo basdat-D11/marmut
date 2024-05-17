@@ -26,7 +26,6 @@ def login(request):
     password = request.POST['password']
     query_str = f"CALL check_subscription_status('{email}')"
     hasil = query(query_str)
-    print(hasil)
     query_str = f"SELECT * FROM akun WHERE email = '{email}' AND password = '{password}'"
     hasil = query(query_str)
     if len(hasil) == 1:
@@ -60,9 +59,6 @@ def login(request):
         else:
             akun['premium'] = False
 
-        #print setiap data di akun
-        for key, value in akun.items():
-            print(f"{key} : {value}")
     
         query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
         hasil = query(query_str)
@@ -71,8 +67,7 @@ def login(request):
             daftar_playlist.add(playlist['judul'])
         daftar_playlist = list(daftar_playlist)
         akun['playlist'] = daftar_playlist
-        
-        print(akun)
+
         role_build = ''
         for role in akun['role']:
             role_build += role
@@ -87,7 +82,7 @@ def login(request):
             akun['gender'] = 'Perempuan'
         request.session['akun'] = akun
         request.session.set_expiry(36000)
-        print(akun)
+
         return HttpResponseRedirect(reverse('main:dashboard'))
 
     else:
@@ -119,7 +114,6 @@ def to_dashboard(request):
             role = akun['kontak']
             return render(request, 'dasboard_label.html', akun)
         except:
-            print(akun)
             return render(request, 'dashboard.html', akun)
     else:
         return redirect(reverse('main:page_login'))
@@ -181,7 +175,6 @@ def build_akun(email, role):
         hasil = query(query_str)
         query_str = f"SELECT * FROM songwriter WHERE email_akun = '{email}'"
         hasil2 = query(query_str)
-        print(hasil2)
         id_artis = ''
         id_songwriter = ''
         try:
@@ -206,7 +199,6 @@ def build_akun(email, role):
                         JOIN KONTEN ON song.id_konten = konten.id
                         WHERE songwriter_write_song.id_songwriter = '{id_songwriter}'"""
         hasil = query(query_str)
-        print(hasil)
         try:
             for lagu in hasil:
                 daftar_lagu.add(lagu['judul'])
@@ -234,7 +226,7 @@ def build_akun(email, role):
 def ceklogin(email, password):
     query_str = f"SELECT * FROM akun WHERE email = '{email}' and password = '{password}'"
     hasil = query(query_str)
-    print(hasil)
+
     try:
         if len(hasil) == 1:
             return True
