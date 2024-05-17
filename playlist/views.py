@@ -14,7 +14,9 @@ def show_playlist(request):
     email = akun['email']
     query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
     hasil = query(query_str)
-    return render(request, 'playlist.html', {'playlist': hasil})
+
+    akun = request.session.get('akun', None)
+    return render(request, 'playlist.html', {'playlist': hasil, 'akun': akun})
 
 def show_add_playlist(request):
     return render(request, 'add_playlist.html')
