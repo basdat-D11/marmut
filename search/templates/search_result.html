@@ -106,7 +106,15 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ result.contenttype }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ result.title }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ result.creatorname }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap"><a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if result.contenttype == 'Song' %}
+                                    <a href="{% url 'playlist:play_song' item_uuid=result.itemuuid %}" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                {% elif result.contenttype == 'User Playlist' %}
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                {% elif result.contenttype == 'Podcast' %}
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

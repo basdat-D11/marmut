@@ -8,9 +8,8 @@ def downloaded_songs(request):
     if akun['premium'] == True:
         email = akun['email']
 
-        print(1)
         query_str = f"""
-        SELECT k.judul AS title, a.nama AS artist
+        SELECT k.judul AS title, a.nama AS artist, s.id_konten AS id
         FROM marmut.downloaded_song ds
         JOIN marmut.song s ON ds.id_song = s.id_konten
         JOIN marmut.artist ar ON s.id_artist = ar.id
