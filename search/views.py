@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from utils.query import query
 
 # View for displaying the search bar
