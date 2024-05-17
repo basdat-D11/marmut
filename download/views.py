@@ -5,6 +5,8 @@ from utils.query import query
 def downloaded_songs(request):
     akun = request.session.get('akun', None)
 
+    role = akun['role']
+
     if akun['premium'] == True:
         email = akun['email']
 
@@ -20,12 +22,16 @@ def downloaded_songs(request):
 
         songs = query(query_str)
         
-        return render(request, 'downloaded_songs.html', {'songs': songs, 'premium': True})
+        return render(request, 'downloaded_songs.html', {'songs': songs, 'premium': True, 'role': role})
     else:
-        return render(request, 'downloaded_songs.html', {'premium': False})
+        return render(request, 'downloaded_songs.html', {'premium': False, 'role': role})
 
 def song_deleted(request, song_title):
-    # Query untuk menghapus lagu berdasarkan judul
+    akun = request.session.get('akun', None)
+
+    role = akun['role']
+    premium = akun['premium']
+
     query_str = f"""
     DELETE FROM marmut.downloaded_song
     USING marmut.konten
@@ -33,8 +39,6 @@ def song_deleted(request, song_title):
     AND marmut.konten.judul = '{song_title}';
     """
 
-    # Eksekusi query
     query(query_str)
 
-    # Render a confirmation page instead of redirecting
-    return render(request, 'song_deleted.html', {'song_title': song_title})
+    return render(request, 'song_deleted.html', {'song_title': song_title, 'role': role, 'premium': premium})

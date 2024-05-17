@@ -1,14 +1,27 @@
 from django.shortcuts import render, redirect
 from utils.query import query
 
-# View for displaying the search bar
+# Create your views here.
 def search_bar(request):
-    return render(request, 'search_bar.html')
+    akun = request.session.get('akun', None)
 
-# View for displaying search results
+    role = akun['role']
+    premium = akun['premium']
+    
+    return render(request, 'search_bar.html', {'role': role, 'premium': premium})
+
 def search_results(request):
     search = request.GET.get('search', '')
-    context = {'search': search}
+    akun = request.session.get('akun', None)
+
+    role = akun['role']
+    premium = akun['premium']
+
+    context = {
+        'search': search,
+        'role': role,
+        'premium': premium
+    }
 
     if search:
         formatted_search = f'%{search}%'
