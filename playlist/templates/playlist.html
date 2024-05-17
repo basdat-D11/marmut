@@ -61,7 +61,7 @@
                 <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
                 <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
             {% endif %}
-            <a href="#">Logout</a>
+            <a href="{% url 'main:logout' %}">Logout</a>
         </div>
     <div class="container mx-auto py-8">
         <h1 class="text-3xl font-bold mb-6">User Playlist Detail</h1>
@@ -97,7 +97,7 @@
                                     <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
                                     <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Ubah</button>
                                 </form>
-                                <a href="#" class="text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
+                                <a href="#" class="hapus text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -106,5 +106,31 @@
             <a href="{% url 'playlist:add_playlist' %}" class="text-yellow-500 hover:underline mt-4"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
         {% endif %}
     </div>
+    <script>
+
+        // Delete playlist
+        $('.hapus').click(function(e) {
+            e.preventDefault();
+            console.log('hapus');
+            var playlist_id = $(this).closest('tr').find('input[name="playlist_id"]').val();
+            console.log(playlist_id)
+            fetch ('{% url "playlist:delete_playlist" %}', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'playlist_id': playlist_id
+                })
+            })
+            //cek response
+            .then (response => {
+                if (response.ok) {
+                    //reload
+                    location.reload();
+                }
+                throw new Error('Request failed.');
+            })
+        });
+
+
+    </script>
 </body>
 </html>
