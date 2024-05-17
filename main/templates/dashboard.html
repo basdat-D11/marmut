@@ -40,7 +40,8 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="">Dashboard</a>
+
+    <a href="{% url 'main:dashboard' %}">Dashboard</a>
         <a href="{% url 'chart:lihat_chart' %}">Chart</a>
         <a href="#">Search Bar</a>
         <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
