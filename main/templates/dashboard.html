@@ -57,7 +57,7 @@
             <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
             <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
         {% endif %}
-        <a href="#">Logout</a>
+        <a href="{% url 'main:logout' %}">Logout</a>
     </div>
 
     <div class="content">

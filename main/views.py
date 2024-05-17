@@ -24,6 +24,9 @@ def page_login(request):
 def login(request):
     email = request.POST['email']
     password = request.POST['password']
+    query_str = f"CALL check_subscription_status('{email}')"
+    hasil = query(query_str)
+    print(hasil)
     query_str = f"SELECT * FROM akun WHERE email = '{email}' AND password = '{password}'"
     hasil = query(query_str)
     if len(hasil) == 1:
@@ -342,6 +345,12 @@ def registrasi_label(request):
         return render(request, 'registrasi_label.html', {'error_message': 'Email sudah terdaftar.'})
     
     return HttpResponseRedirect(reverse('main:page_login'))
+
+
+@csrf_exempt
+def logout(request):
+    request.session.flush()
+    return HttpResponseRedirect(reverse('main:home'))
 
 
     

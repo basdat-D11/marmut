@@ -239,26 +239,38 @@ def playsong(request):
         return HttpResponseServerError('gagal')
     
  
-
+@csrf_exempt
 def shuffle(request):
-    idp = json.loads(request.body)['id']
+    idp = json.loads(request.body)['id_playlist']
+    print(idp)
     email = request.session.get('akun', None)['email']
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    query_str = f"""SELECT * FROM user_playlist where id_user_playlist = {idp}"""
+    print(time)
+    query_str = f"""SELECT * FROM user_playlist where id_playlist = '{idp}'"""
     hasil = query(query_str)
+    print(hasil)
     hasil = hasil[0]
+    pembuat = hasil['email_pembuat']
     id_playlist = hasil['id_playlist']
+    id_userp = hasil['id_user_playlist']
 
     query_str = f"""SELECT * from playlist_song where id_playlist='{id_playlist}'"""
     hasild = query(query_str)
 
-    query_str = f"""insert into akun_play_playlist values ('{email}', '{id_playlist}', '{time}')"""
+    query_str = f"""insert into akun_play_user_playlist(email_pemain, id_user_playlist, waktu, email_pembuat) values ('{email}', '{id_userp}', '{time}', '{pembuat}')"""
     hasil = query(query_str)
+
+    print(hasil)
 
     for a in hasild:
         lagu = a['id_song']
         query_str = f"""update song set total_play = total_play + 1 where id_konten = '{lagu}'"""
         query(query_str)
+
+    if isinstance(hasil, int):
+        return HttpResponse('berhasil')
+    else:
+        return HttpResponseServerError('gagal')
 
 def show_add_song(request, item_uuid):
     query_str = f"""SELECT konten.judul, konten.id FROM konten join
@@ -306,27 +318,34 @@ def handle_download(request):
     else:
         print(hasil)
         return HttpResponseServerError('gagal')
-    
-def handle_delete_playlist(request):
-    id_playlist = json.loads(request.body)['id']
 
-    query_str = f"""select * from user_playlist_song where id_user_playlist = '{id_playlist}'"""
+@csrf_exempt   
+def handle_delete_playlist(request):
+    id_playlist = json.loads(request.body)['playlist_id']
+
+    print(id_playlist)
+
+    query_str = f"""select * from user_playlist where id_user_playlist = '{id_playlist}'"""
     hasil = query(query_str)
     hasil = hasil[0]
 
     id_playlist2 = hasil['id_playlist']
-    query_str = f"""DELETE FROM user_playlist WHERE id_user_playlist = '{id_playlist}'"""
+    query_str = f"""DELETE FROM user_playlist CASCADE WHERE id_user_playlist = '{id_playlist}'"""
     hasil = query(query_str)
 
-    query_str = f"""DELETE FROM playlist_song WHERE id_playlist = '{id_playlist2}'"""
+    print(hasil)
+
+    query_str = f"""DELETE FROM playlist_song CASCADE WHERE id_playlist = '{id_playlist2}'"""
     hasil = query(query_str)
+
+    print(hasil)
 
     if isinstance(hasil, int):
-        return redirect('playlist:show_playlist')
+        return HttpResponse('sucess')
     else:
-        return render(request, 'error.html')
+        return HttpResponseServerError('gagal')
     
-
+@csrf_exempt
 def handle_delete_song(request):
     id_song = json.loads(request.body)['id']
     id_playlist = json.loads(request.body)['playlist']
@@ -334,8 +353,10 @@ def handle_delete_song(request):
     query_str = f"""DELETE FROM playlist_song WHERE id_playlist = '{id_playlist}' AND id_song = '{id_song}'"""
     hasil = query(query_str)
 
+    print(hasil)
+
     if isinstance(hasil, int):
-        return HttpResponse('berhasil')
+        return HttpResponse('sucess')
     else:
         return HttpResponseServerError('gagal')
 

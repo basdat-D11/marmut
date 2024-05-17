@@ -20,5 +20,7 @@ urlpatterns = [
     path('show_add_song/<str:item_uuid>/', show_add_song, name='show_add_song'),
     path('handle_download', handle_download, name='handle_download'),
     path('complete_song_playlist/<str:item_uuid>/', add_song2, name='complete_song_playlist'),
-    path('complete/<str:item_uuid>/', add_song2, name='complete')
+    path('complete/<str:item_uuid>/', add_song2, name='complete'),
+    path('delete_playlist', handle_delete_playlist, name='delete_playlist'),
+    path('delete_song', handle_delete_song, name='delete_song'),
     ]
