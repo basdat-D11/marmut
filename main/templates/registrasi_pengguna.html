@@ -57,9 +57,16 @@
     input[type="submit"]:hover {
       background-color: #45a049;
     }
+
+    .error-message {
+      color: red;
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
+  <p id = 'error' class="error-message">{{ error_message }}</p>
   <h2>FORM REGISTRASI</h2>
   <form action="{% url 'main:registrasi_pengguna' %}" method="post">
     <label for="email">Email:</label>
@@ -94,5 +101,9 @@
     
     <button type="submit" class="submit-btn">Register</button>
   </form>
+
+
+  <script>
+  </script>
 </body>
 </html>
