@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'search',
     'album',
     'royalti',
+    'podcast',
+    'chart'
 ]
 
 MIDDLEWARE = [
