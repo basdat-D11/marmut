@@ -290,7 +290,12 @@ def registrasi_pengguna(request):
 
     query_str = f"INSERT INTO akun VALUES ('{email}', '{password}', '{nama}', '{gender}', '{tpt_lahir}', '{tgl_lahir}', '{is_verified}', '{kota}')"
     hasil = query(query_str)
-    print(hasil)
+    
+    if isinstance(hasil, int):
+        pass
+    else:
+        return render(request, 'registrasi_pengguna.html', {'error_message': 'Email sudah terdaftar.'})
+
     if 'podcaster' in role:
         query_str = f"INSERT INTO podcaster VALUES ('{email}')"
         query(query_str)
@@ -298,14 +303,47 @@ def registrasi_pengguna(request):
 
     id_sw = uuid4()
     id_phc = uuid4()
-    if 'songwriter' in role:
-        print('masukk')
+    id_artis = uuid4()
+    if 'songwriter' in role or 'artis' in role:
         query_str = f"INSERT INTO pemilik_hak_cipta VALUES ('{id_phc}', {int('3000')})"
         hasil = query(query_str)
-        print(hasil)
+    if 'songwriter' in role:
         query_str = f"INSERT INTO songwriter VALUES ('{id_sw}','{email}', '{id_phc}')"
         hasil = query(query_str)
-        print(hasil)
+    if 'artis' in role:
+        query_str = f"INSERT INTO artist VALUES ('{id_artis}', '{email}', '{id_phc}')"
+        hasil = query(query_str)
+
+    return HttpResponseRedirect(reverse('main:page_login'))
+
+
+@csrf_exempt
+def registrasi_label(request):
+    nama = request.POST.get('name')
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    kontak = request.POST.get('contact')
+    
+    idl = uuid4()
+    id_phc = uuid4()
+
+
+
+    query_str = f"INSERT INTO pemilik_hak_cipta VALUES ('{id_phc}', {int('3000')})"
+    hasil = query(query_str)
+    query_str = f"INSERT INTO label VALUES ('{idl}', '{email}', '{password}', '{nama}', '{kontak}', '{id_phc}')"
+    hasil = query(query_str)
+
+    if isinstance(hasil, int):
+        pass
+    else:
+        #delete id_phc
+        query_str = f"DELETE FROM pemilik_hak_cipta WHERE id = '{id_phc}'"
+        return render(request, 'registrasi_label.html', {'error_message': 'Email sudah terdaftar.'})
+    
+    return HttpResponseRedirect(reverse('main:page_login'))
+
+
     
 
 

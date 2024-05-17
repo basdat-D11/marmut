@@ -20,8 +20,11 @@ def show_add_playlist(request):
     return render(request, 'add_playlist.html')
 
 @csrf_exempt
-def show_detail_playlist(request):
-    playlistId = request.POST.get('playlist_id')
+def show_detail_playlist(request, item_uuid):
+    playlistId = item_uuid
+    #playlistid uuid to text
+    playlistId = str(playlistId)
+    print(playlistId)
     query_str = f"SELECT * FROM user_playlist WHERE id_user_playlist = '{playlistId}'"
     hasil = query(query_str)
     pembuat = hasil[0]['email_pembuat']
@@ -238,17 +241,19 @@ def shuffle(request):
     idp = json.loads(request.body)['id']
     email = request.session.get('akun', None)['email']
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    query_str = """SELECT * FROM user_playlist where id_user_playlist = idp """
+    query_str = f"""SELECT * FROM user_playlist where id_user_playlist = {idp}"""
     hasil = query(query_str)
     hasil = hasil[0]
     id_playlist = hasil['id_playlist']
 
     query_str = f"""SELECT * from playlist_song where id_playlist='{id_playlist}'"""
-    hasil = query(query_str)
+    hasild = query(query_str)
 
     query_str = f"""insert into akun_play_playlist values ('{email}', '{id_playlist}', '{time}')"""
-    for a in hasil:
-        lagu = hasil['id_song']
+    hasil = query(query_str)
+
+    for a in hasild:
+        lagu = a['id_song']
         query_str = f"""insert into akun_play_song values ('{email}', '{lagu}', '{time}')"""
         query(query_str)
 
@@ -305,5 +310,12 @@ def handle_download(request):
 show_add_song buat yang pas di playlist pilih songnya add_song.html
 
 add_song2 buat nampilin berhasilnya nanti, rendernya tetep yang add_complete.html
+
+"""
+
+
+"""
+urus shuffle play, sekarang soalnya pake trigger.
+urus login, pake select yang function kemaren
 
 """
