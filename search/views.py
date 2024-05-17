@@ -1,19 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from utils.query import query
 
-# View for displaying the search bar
+# Create your views here.
 def search_bar(request):
-    return render(request, 'search_bar.html')
+    akun = request.session.get('akun', None)
 
-# View for displaying search results
+    role = akun['role']
+    premium = akun['premium']
+    
+    return render(request, 'search_bar.html', {'role': role, 'premium': premium})
+
 def search_results(request):
     search = request.GET.get('search', '')
-    context = {'search': search}
+    akun = request.session.get('akun', None)
+
+    role = akun['role']
+    premium = akun['premium']
+
+    context = {
+        'search': search,
+        'role': role,
+        'premium': premium
+    }
 
     if search:
         formatted_search = f'%{search}%'
         search_query = f"""
-        SELECT konten.judul AS Title, 'Song' AS ContentType, akun.nama AS CreatorName
+        SELECT konten.judul AS Title, 'Song' AS ContentType, akun.nama AS CreatorName, song.id_konten AS ItemUUID
         FROM song
         JOIN konten ON song.id_konten = konten.id
         JOIN artist ON song.id_artist = artist.id
@@ -22,7 +35,7 @@ def search_results(request):
 
         UNION
 
-        SELECT konten.judul AS Title, 'Podcast' AS ContentType, akun.nama AS CreatorName
+        SELECT konten.judul AS Title, 'Podcast' AS ContentType, akun.nama AS CreatorName, podcast.id_konten AS ItemUUID
         FROM podcast
         JOIN konten ON podcast.id_konten = konten.id
         JOIN podcaster ON podcast.email_podcaster = podcaster.email
@@ -31,7 +44,7 @@ def search_results(request):
 
         UNION
 
-        SELECT user_playlist.judul AS Title, 'User Playlist' AS ContentType, akun.nama AS CreatorName
+        SELECT user_playlist.judul AS Title, 'User Playlist' AS ContentType, akun.nama AS CreatorName, user_playlist.id_user_playlist AS ItemUUID
         FROM user_playlist
         JOIN akun ON user_playlist.email_pembuat = akun.email
         WHERE user_playlist.judul ILIKE '{formatted_search}'
@@ -39,8 +52,6 @@ def search_results(request):
         ORDER BY Title ASC;
         """
         data = query(search_query)
-        
-        print(data)
 
         context['results'] = data
 
