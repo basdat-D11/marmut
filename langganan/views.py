@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import render, redirect
 from utils.query import query
 import uuid
@@ -45,9 +46,21 @@ def pembayaran_paket(request, jenis, harga):
         INSERT INTO marmut.transaction (id, jenis_paket, email, timestamp_dimulai, timestamp_berakhir, metode_bayar, nominal)
         VALUES ('{id_transaksi}', '{jenis}', '{email}', '{timestamp_dimulai}', '{timestamp_berakhir}', '{metode_bayar}', {nominal});
         """
+
         query(query_str)
 
-        return redirect('langganan:riwayat_transaksi')
+        if akun['premium'] == False:
+            akun['premium'] = True
+            request.session['akun'] = akun
+            return redirect('langganan:riwayat_transaksi')
+        else:
+            # Set error message in context
+            context = {
+                'jenis': jenis,
+                'harga': harga,
+                'error_message': "Pengguna masih memiliki paket aktif. Transaksi dibatalkan."
+            }
+            return render(request, 'pembayaran_paket.html', context)
 
     context = {
         'jenis': jenis,

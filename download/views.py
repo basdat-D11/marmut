@@ -8,6 +8,7 @@ def downloaded_songs(request):
     if akun['premium'] == True:
         email = akun['email']
 
+        print(1)
         query_str = f"""
         SELECT k.judul AS title, a.nama AS artist
         FROM marmut.downloaded_song ds
@@ -20,10 +21,8 @@ def downloaded_songs(request):
 
         songs = query(query_str)
         
-        # Render template dengan data lagu yang diberikan
-        return render(request, 'downloaded_songs.html', {'songs': songs})
+        return render(request, 'downloaded_songs.html', {'songs': songs, 'premium': True})
     else:
-        # Render template dengan pesan "Anda tidak dapat menggunakan fitur ini"
         return render(request, 'downloaded_songs.html', {'premium': False})
 
 def song_deleted(request, song_title):
