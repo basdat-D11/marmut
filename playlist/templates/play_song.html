@@ -41,14 +41,19 @@
             <p class="text-gray-600"><strong>Judul:</strong>{{ lagu.judul }}</p>
             <div class="genre-songwriter">
                 <p class="text-gray-600"><strong>Genre(s):</strong></p>
-                <p class="text-gray-600">- Genre1</p>
-                <p class="text-gray-600">- Genre2</p>
+                {% for genre in genre %}
+                    <p class="text-gray-600">- {{ genre }}</p>
+                {% endfor %}
             </div>
-            <p class="text-gray-600"><strong>Artist:</strong> Artist1</p>
+            <p class="text-gray-600"><strong>Artis(s):</strong></p>
+            {% for artis in artis %}
+                <p class="text-gray-600">- {{ artis }}</p>
+            {% endfor %}
             <div class="genre-songwriter">
                 <p class="text-gray-600"><strong>Songwriter(s):</strong></p>
-                <p class="text-gray-600">- Songwriter1</p>
-                <p class="text-gray-600">- Songwriter2</p>
+                {% for songwriter in songwriter %}
+                    <p class="text-gray-600">- {{ songwriter }}</p>
+                {% endfor %}
             </div>
             <p class="text-gray-600"><strong>Durasi:</strong>{{ lagu.durasi }}</p>
             <p class="text-gray-600"><strong>Tanggal Rilis:</strong>{{ lagu.tanggal_rilis }}</p>
