@@ -130,7 +130,9 @@ def add_song(request, item_uuid):
 
     print(lagu)
 
-    return render(request, 'song_to_playlist.html', {'playlist': playlist, 'lagu': lagu})
+    akun = request.session.get('akun', None)
+
+    return render(request, 'song_to_playlist.html', {'playlist': playlist, 'lagu': lagu, 'akun': akun})
 
 def complete_add_song(request, item_uuid):
     if request.method == 'POST':
@@ -221,7 +223,9 @@ def show_edit_playlist(request, item_uuid):
     hasil = query(query_str)
     hasil = hasil[0]
     print(hasil)
-    return render(request, 'edit_playlist.html', {'playlist': hasil})
+
+    akun = request.session.get('akun', None)
+    return render(request, 'edit_playlist.html', {'playlist': hasil, 'akun': akun})
 
 @csrf_exempt
 def playsong(request):
@@ -232,8 +236,6 @@ def playsong(request):
     query_str = f"""INSERT INTO akun_play_song VALUES ('{email}', '{lagu}', '{time}')"""
     hasil = query(query_str)
     if isinstance(hasil, int):
-        query_str = f"""update song set total_play = total_play + 1 where id_konten = '{lagu}'"""
-        hasil = query(query_str)
         return HttpResponse('berhasil')
     else:
         return HttpResponseServerError('gagal')
@@ -259,7 +261,7 @@ def shuffle(request):
 
     query_str = f"""insert into akun_play_user_playlist(email_pemain, id_user_playlist, waktu, email_pembuat) values ('{email}', '{id_userp}', '{time}', '{pembuat}')"""
     hasil = query(query_str)
-    
+
     if isinstance(hasil, int):
         return HttpResponse('berhasil')
     else:

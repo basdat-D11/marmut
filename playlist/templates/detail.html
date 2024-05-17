@@ -107,6 +107,9 @@
         <!-- Daftar Lagu -->
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-lg font-semibold mb-4">Daftar Lagu</h2>
+            {% if lagu|length == 0 %}
+                <p class="text-center">Belum ada lagu dalam playlist ini.</p>
+            {% else %}
             <table class="w-full">
                 <thead class="bg-gray-800 text-white">
                     <tr>
@@ -131,6 +134,7 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
             <a href="{% url 'playlist:show_add_song' item_uuid=playlist.id_user_playlist %}" class="btn btn-yellow mt-4"><i class="fas fa-plus mr-1"></i>Tambah Lagu</a>
         </div>
     </div>
