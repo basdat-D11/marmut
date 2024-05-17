@@ -42,15 +42,18 @@
                 </tr>
             </tbody>
         </table>
-        <div class="mb-4">Metode Pembayaran:</div>
-        <select id="payment-method" name="payment_method" class="mb-4 p-2 bg-white border border-gray-300 rounded-md">
-            <option value="transfer_bank">Transfer Bank</option>
-            <option value="kartu_kredit">Kartu Kredit</option>
-            <option value="e_wallet">E-Wallet</option>
-        </select>
-        <div class="flex justify-center mt-4">
-            <a href="#" class="submit-link" onclick="event.preventDefault();">Submit</a>
-        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">Metode Pembayaran:</div>
+            <select id="payment-method" name="payment_method" class="mb-4 p-2 bg-white border border-gray-300 rounded-md">
+                <option value="Transfer Bank">Transfer Bank</option>
+                <option value="Kartu Kredit">Kartu Kredit</option>
+                <option value="E-Wallet">E-Wallet</option>
+            </select>
+            <div class="flex justify-center mt-4">
+                <button type="submit" class="submit-link">Submit</button>
+            </div>
+        </form>
     </div>
 </body>
 </html>
