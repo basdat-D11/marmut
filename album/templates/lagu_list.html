@@ -75,6 +75,7 @@
             filter: brightness(0.9);
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -110,13 +111,28 @@
 
     <script>
         function showDetail(songId) {
+            window.location.href = "/playlist/play_song/" + songId
             // Implement logic to show song detail
             console.log("Showing detail for song with ID:", songId);
         }
 
         function deleteSong(songId) {
-            // Implement logic to delete song
-            console.log("Deleting song with ID:", songId);
+            $.ajax({
+                url: '/album/delete-song/' + songId,
+                method: 'POST',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert('Song deleted successfully.');
+                        window.location.href = '/album';
+                    } else {
+                        alert('Failed to delete album.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while deleting the album.');
+                }
+            });
         }
     </script>
 </body>
