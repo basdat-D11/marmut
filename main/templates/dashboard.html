@@ -46,7 +46,7 @@
         <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
         <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
         {% if premium %}
-            <a href="{% download:downloaded_songs %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
         {% endif %}
 
         {% if 'podcaster' in role %}
