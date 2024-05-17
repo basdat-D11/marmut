@@ -14,7 +14,9 @@ def show_playlist(request):
     email = akun['email']
     query_str = f"SELECT * FROM user_playlist WHERE email_pembuat = '{email}'"
     hasil = query(query_str)
-    return render(request, 'playlist.html', {'playlist': hasil})
+
+    akun = request.session.get('akun', None)
+    return render(request, 'playlist.html', {'playlist': hasil, 'akun': akun})
 
 def show_add_playlist(request):
     return render(request, 'add_playlist.html')
@@ -230,7 +232,8 @@ def playsong(request):
     query_str = f"""INSERT INTO akun_play_song VALUES ('{email}', '{lagu}', '{time}')"""
     hasil = query(query_str)
     if isinstance(hasil, int):
-        print(hasil)
+        query_str = f"""update song set total_play = total_play + 1 where id_konten = '{lagu}'"""
+        hasil = query(query_str)
         return HttpResponse('berhasil')
     else:
         return HttpResponseServerError('gagal')
@@ -254,7 +257,7 @@ def shuffle(request):
 
     for a in hasild:
         lagu = a['id_song']
-        query_str = f"""insert into akun_play_song values ('{email}', '{lagu}', '{time}')"""
+        query_str = f"""update song set total_play = total_play + 1 where id_konten = '{lagu}'"""
         query(query_str)
 
 def show_add_song(request, item_uuid):
@@ -302,6 +305,38 @@ def handle_download(request):
         return HttpResponse('berhasil')
     else:
         print(hasil)
+        return HttpResponseServerError('gagal')
+    
+def handle_delete_playlist(request):
+    id_playlist = json.loads(request.body)['id']
+
+    query_str = f"""select * from user_playlist_song where id_user_playlist = '{id_playlist}'"""
+    hasil = query(query_str)
+    hasil = hasil[0]
+
+    id_playlist2 = hasil['id_playlist']
+    query_str = f"""DELETE FROM user_playlist WHERE id_user_playlist = '{id_playlist}'"""
+    hasil = query(query_str)
+
+    query_str = f"""DELETE FROM playlist_song WHERE id_playlist = '{id_playlist2}'"""
+    hasil = query(query_str)
+
+    if isinstance(hasil, int):
+        return redirect('playlist:show_playlist')
+    else:
+        return render(request, 'error.html')
+    
+
+def handle_delete_song(request):
+    id_song = json.loads(request.body)['id']
+    id_playlist = json.loads(request.body)['playlist']
+
+    query_str = f"""DELETE FROM playlist_song WHERE id_playlist = '{id_playlist}' AND id_song = '{id_song}'"""
+    hasil = query(query_str)
+
+    if isinstance(hasil, int):
+        return HttpResponse('berhasil')
+    else:
         return HttpResponseServerError('gagal')
 
 
