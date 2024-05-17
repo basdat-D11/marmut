@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Podcast</title>
     <style>
         body {
@@ -38,28 +38,81 @@
         button:hover {
             background-color: #6a00ff63;
         }
-        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .popup.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <h1>Create Podcast</h1>
 
-<form>
+<form id="createPodcastForm">
     <label for="judul">Judul:</label>
     <input type="text" id="judul" name="judul" required>
     <label for="genre">Genre:</label>
     <select id="genre" name="genre" multiple required>
-        <option value="genre1">Genre 1</option>
-        <option value="genre2">Genre 2</option>
-        <!-- genre lainnya -->
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Jazz">Jazz</option>
+        <!-- Add more genres as needed -->
     </select>
-    <label for="durasi">Durasi:</label
-    ><input type="text" id="durasi" name="durasi" required>
     <button type="submit">SUBMIT</button>
 </form>
 
-<button onclick="window.location.href='kelolapodcast.html'">Kembali</button>
+<button id="backButton">Kembali</button>
+
+<div id="popup" class="popup">Podcast berhasil tercatat!</div>
+
+<script>
+    document.getElementById("backButton").onclick = function() {
+        window.location.href = "{% url 'podcast:show_podcast' %}";
+    };
+
+    document.getElementById("createPodcastForm").onsubmit = function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        var jsonData = {};
+        formData.forEach((value, key) => { jsonData[key] = value });
+        jsonData['genre'] = Array.from(document.getElementById('genre').selectedOptions).map(option => option.value);
+
+        fetch("{% url 'podcast:create_podcast' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('popup').classList.add('show');
+                setTimeout(() => {
+                    window.location.href = "{% url 'podcast:list_podcast' %}";
+                }, 2000);
+            } else {
+                alert("Failed to record the podcast.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Failed to record the podcast.");
+        });
+    };
+</script>
 
 </body>
 </html>
