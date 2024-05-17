@@ -1,8 +1,8 @@
-<!DOCTYPE html
-><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Episode</title>
     <style>
         body {
@@ -38,30 +38,59 @@
         button:hover {
             background-color: #6a00ff63;
         }
-
     </style>
 </head>
 <body>
+    <form id="createEpisodeForm">
+        <label for="podcast">Podcast:</label>
+        <select id="podcast" name="podcast" required>
+            {% for podcast in podcasts %}
+                <option value="{{ podcast.id_konten }}">{{ podcast.judul }}</option>
+            {% endfor %}
+        </select>
+        <label for="judul_episode">Judul:</label>
+        <input type="text" id="judul_episode" name="judul" required>
+        <label for="deskripsi">Deskripsi:</label>
+        <input type="text" id="deskripsi" name="deskripsi" required>
+        <label for="durasi_episode">Durasi:</label>
+        <input type="text" id="durasi_episode" name="durasi" required>
+        <button type="submit">SUBMIT</button>
+    </form>
+    
+    <button id="backButton">Kembali</button>
 
-<h1>Create Episode</h1>
+    <script>
+        document.getElementById("backButton").onclick = function() {
+            window.location.href = "{% url 'podcast:show_podcast' %}";
+        };
 
-<form>
-    <label for="podcast">Podcast:</label>
-    <select id="podcast" name="podcast" required>
-        <option value="Podcast1">Podcast1</option>
-        <option value="Podcast2">Podcast2</option>
-        <!-- podcast lainnya-->
-    </select>
-    <label for="judul_episode">Judul:</label>
-    <input type="text" id="judul_episode" name="judul_episode" required>
-    <label for="deskripsi">Deskripsi:</label
-    ><input type="text" id="deskripsi" name="deskripsi" required>
-    <label for="durasi_episode">Durasi:</label>
-    <input type="text" id="durasi_episode" name="durasi_episode" required>
-    <button type="submit">SUBMIT</button>
-</form>
+        document.getElementById("createEpisodeForm").onsubmit = function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var jsonData = {};
+            formData.forEach((value, key) => { jsonData[key] = value });
 
-<button onclick="window.location.href='kelolapodcast.html'">Kembali</button>
-
+            fetch("{% url 'podcast:create_episode' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = "{% url 'podcast:daftar_episode' %}?podcast=" + jsonData['podcast'];  // Redirect to the episode list page
+                } else {
+                    alert("Failed to create the episode.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Failed to create the episode.");
+            });
+        };
+    </script>
 </body>
 </html>

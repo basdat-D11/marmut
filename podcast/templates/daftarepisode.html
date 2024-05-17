@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Episode</title>
     <style>
         body {
@@ -32,26 +32,27 @@
             background-color: #6a00ff2f;
             color: #000000;
         }
-        button {
+        .action-buttons a {
             padding: 10px 20px;
             font-size: 14px;
             background-color: #6900ff;
             color: #fff;
             border: none;
             border-radius: 5px;
+            text-decoration: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        button:hover {
+        .action-buttons a:hover {
             background-color: #6a00ff63;
         }
-
     </style>
 </head>
 <body>
 
 <h1>Daftar Episode</h1>
 
+{% if episodes %}
 <table class="episode-table">
     <thead>
         <tr>
@@ -63,25 +64,53 @@
         </tr>
     </thead>
     <tbody>
+        {% for episode in episodes %}
         <tr>
-            <td>SubJudul1</td>
-            <td>Lorem Ipsum ...</td>
-            <td>59 menit</td>
-            <td>18/03/2024</td>
-            <td class="action-buttons"><button>Hapus</button></td>
+            <td>{{ episode.judul }}</td>
+            <td>{{ episode.deskripsi }}</td>
+            <td>{{ episode.durasi }} menit</td>
+            <td>{{ episode.tanggal_rilis }}</td>
+            <td class="action-buttons"><a href="#" onclick="deleteEpisode('{{ episode.id_episode }}')" class="button">Hapus</a></td>
         </tr>
-        <tr>
-            <td>SubJudul2</td>
-            <td>Lorem Ipsum ...</td>
-            <td>1 jam 2 menit</td>
-            <td>25/03/2024</td>
-            <td class="action-buttons"><button>Hapus</button></td>
-        </tr>
-        <!-- episode lainnya -->
+        {% endfor %}
     </tbody>
 </table>
-<button onclick="window.location.href='kelolapodcast.html'">Kembali</button>
+{% else %}
+<p>No episodes found.</p>
+{% endif %}
 
+<button id="backButton">Kembali</button>
+
+<script>
+    document.getElementById("backButton").onclick = function() {
+        window.location.href = "{% url 'podcast:show_podcast' %}";
+    };
+
+    function deleteEpisode(episodeId) {
+        if (confirm("Apakah Anda yakin ingin menghapus episode ini?")) {
+            fetch("{% url 'podcast:delete_episode' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ episode_id: episodeId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                } else {
+                    alert("Gagal menghapus episode.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Gagal menghapus episode.");
+            });
+        }
+    }
+</script>
 
 </body>
 </html>

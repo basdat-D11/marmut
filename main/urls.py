@@ -4,7 +4,7 @@ from main.views import *
 app_name = 'main'
 
 urlpatterns = [
-    path('tes', home, name='home'),
+    path('/tes', home, name='home'),
     path('page_login', page_login, name='page_login'),
     path('handlelogin', login, name='handlelogin'),
     path('dashboard', to_dashboard, name='dashboard'),

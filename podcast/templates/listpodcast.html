@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device_width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Podcast</title>
     <style>
         body {
@@ -35,6 +35,22 @@
         }
         .podcast-list th {
             background-color: #6a00ff2f;
+        }
+        .action-buttons a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #6900ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-buttons a:hover {
+            background-color: #6a00ff63;
         }
         .back-button {
             margin-top: 20px; 
@@ -69,36 +85,53 @@
             </tr>
         </thead>
         <tbody>
+            {% for podcast in podcasts %}
             <tr>
-                <td>Podcast1</td>
-                <td>0</td>
-                <td>0 menit</td>
+                <td>{{ podcast.judul }}</td>
+                <td>{{ podcast.jumlah_episode }}</td>
+                <td>{{ podcast.total_durasi }} menit</td>
                 <td class="action-buttons">
-                    <button onclick="window.location.href='daftarepisode.html?podcast=Podcast1'">Lihat Daftar Episode</button>
-                    <button onclick="window.location.href='createepisode.html?podcast=Podcast1'">Tambah Episode</button>
-                    <button onclick="deletePodcast('Podcast1')">Hapus</button>
+                    <a href="{% url 'podcast:daftar_episode' %}?podcast={{ podcast.id_konten }}">Lihat Daftar Episode</a>
+                    <a href="{% url 'podcast:create_episode' %}?podcast={{ podcast.id_konten }}">Tambah Episode</a>
+                    <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ podcast.id_konten }}" class="bg-[#9e60d1] text-white px-3 py-1 rounded-full font-semibold hover:bg-[#b17bc9]">Play Podcast</a>
+                    <a href="#" onclick="deletePodcast('{{ podcast.id_konten }}')">Hapus</a>
                 </td>
             </tr>
-            <tr>
-                <td>Podcast2</td>
-                <td>2</td>
-                <td>4 menit</td>
-                <td class="action-buttons">
-                    <button onclick="window.location.href='daftarepisode.html?podcast=Podcast2'">Lihat Daftar Episode</button>
-                    <button onclick="window.location.href='createepisode.html?podcast=Podcast2'">Tambah Episode</button>
-                    <button onclick="deletePodcast('Podcast2')">Hapus</button>
-                </td>
-            </tr>
-            <!-- podcast lainnya -->
+            {% endfor %}
         </tbody>
     </table>
-
-    <button class="back-button" onclick="window.location.href='kelolapodcast.html'">Kembali</button>
 </div>
 
+<button id="backButton">Kembali</button>
+
 <script>
-    function deletePodcast(podcast) {
-        alert("Deleting podcast: " + podcast);
+    document.getElementById("backButton").onclick = function() {
+        window.location.href = "{% url 'podcast:show_podcast' %}";
+    };
+
+    function deletePodcast(podcastId) {
+        if (confirm("Apakah Anda yakin ingin menghapus podcast ini?")) {
+            fetch("{% url 'podcast:delete_podcast' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({ podcast_id: podcastId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                } else {
+                    alert("Gagal menghapus podcast.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Gagal menghapus podcast.");
+            });
+        }
     }
 </script>
 
