@@ -93,8 +93,12 @@
                 <td class="action-buttons">
                     <a href="{% url 'podcast:daftar_episode' %}?podcast={{ podcast.id_konten }}">Lihat Daftar Episode</a>
                     <a href="{% url 'podcast:create_episode' %}?podcast={{ podcast.id_konten }}">Tambah Episode</a>
-                    <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ podcast.id_konten }}" class="bg-[#9e60d1] text-white px-3 py-1 rounded-full font-semibold hover:bg-[#b17bc9]">Play Podcast</a>
-                    <a href="#" onclick="deletePodcast('{{ podcast.id_konten }}')">Hapus</a>
+                    <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ podcast.id_konten }}">Play Podcast</a>
+                    <form action="{% url 'podcast:delete_podcast' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="podcast_id" value="{{ podcast.id_konten }}">
+                        <button type="submit">Hapus</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
@@ -108,31 +112,6 @@
     document.getElementById("backButton").onclick = function() {
         window.location.href = "{% url 'podcast:show_podcast' %}";
     };
-
-    function deletePodcast(podcastId) {
-        if (confirm("Apakah Anda yakin ingin menghapus podcast ini?")) {
-            fetch("{% url 'podcast:delete_podcast' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ podcast_id: podcastId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    location.reload();
-                } else {
-                    alert("Gagal menghapus podcast.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Gagal menghapus podcast.");
-            });
-        }
-    }
 </script>
 
 </body>
