@@ -146,7 +146,7 @@ def daftar_episode(request):
 
     logger.info(f"Received podcast_id: {podcast_id}")
 
-    query_str = f"SELECT id_episode, judul, deskripsi, durasi, tanggal_rilis FROM episode WHERE id_konten_podcast = '{podcast_id}';"
+    query_str = f"SELECT id_konten_podcast, id_episode, judul, deskripsi, durasi, tanggal_rilis FROM episode WHERE id_konten_podcast = '{podcast_id}';"
     hasil = query(query_str)
     logger.info(f"Fetched episodes for podcast {podcast_id}: {hasil}")
 
@@ -225,7 +225,7 @@ def play_podcast(request):
     return render(request, 'playpodcast.html', context)
 
 def delete_podcast(request):
-    podcast_id = request.GET.get('podcast_id')
+    podcast_id = request.POST.get('podcast_id')
     
     with connection.cursor() as cursor:
         cursor.execute(
@@ -238,15 +238,17 @@ def delete_podcast(request):
     
     return HttpResponseRedirect(reverse('podcast:list_podcast'))
 
-
+@csrf_exempt
 def delete_episode(request):
-    episode_id = request.GET.get('episode_id')
-    podcast_id = request.GET.get('podcast_id')
+    episode_id = request.POST.get('episode_id')
+    podcast_id = request.POST.get('podcast_id')
     
+    print("podcast id :")
+    print(podcast_id)
     with connection.cursor() as cursor:
         cursor.execute(
             'DELETE FROM marmut.episode WHERE id_episode = %s', [episode_id]
         )
         connection.commit()
     
-    return HttpResponseRedirect(reverse('podcast:daftar_episode') + f'?podcast_id={podcast_id}')
+    return HttpResponseRedirect(reverse('podcast:daftar_episode') + f'?podcast={podcast_id}')

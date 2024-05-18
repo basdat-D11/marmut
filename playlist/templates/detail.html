@@ -40,24 +40,24 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="">Dashboard</a>
-        <a href="#">Chart</a>
-        <a href="#">Search Bar</a>
-        <a href="#">Kelola Playlist</a>
-        <a href="#">Langganan Paket</a>
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
+        <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+        <a href="{% url 'search:search_bar' %}">Search Bar</a>
+        <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+        <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
         {% if akun.premium %}
-            <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
         {% endif %}
 
         {% if 'podcaster' in akun.role %}
-            <a href="#">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
         {% endif %}
 
         {% if 'artis' in akun.role or 'songwriter' in akun.role %}
-            <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
-            <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
         {% endif %}
-        <a href="#">Logout</a>
+        <a href="{% url 'main:logout' %}">Logout</a>
     </div>
 
 <div class="content">
@@ -107,6 +107,9 @@
         <!-- Daftar Lagu -->
         <div class="bg-white rounded-lg shadow-md p-6">
             <h2 class="text-lg font-semibold mb-4">Daftar Lagu</h2>
+            {% if lagu|length == 0 %}
+                <p class="text-center">Belum ada lagu dalam playlist ini.</p>
+            {% else %}
             <table class="w-full">
                 <thead class="bg-gray-800 text-white">
                     <tr>
@@ -119,18 +122,19 @@
                 <tbody>
                     {% for lagu in lagu %}
                         <tr class="hover:bg-gray-100">
-                            <td class="px-6 py-4">{{ lagu.judul }}</td>
+                            <td value="{{ lagu.id }}" class="px-6 py-4">{{ lagu.judul }}</td>
                             <td class="px-6 py-4">{{ lagu.oleh }}</td>
                             <td class="px-6 py-4">{{ lagu.durasi }}</td>
                             <td class="px-6 py-4 flex justify-center space-x-4">
                                 <a href="{% url 'playlist:play_song' item_uuid=lagu.id %}" class="text-blue-500 hover:underline mr-2"><i class="fas fa-eye"></i> Lihat</a>
                                 <a href="#" onclick="playSong('{{ lagu.id }}', event)" class="text-green-500 hover:underline mr-2"><i class="fas fa-play"></i> Play</a>
-                                <a href="#" class="text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
+                                <a href="#" class="hapus text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            {% endif %}
             <a href="{% url 'playlist:show_add_song' item_uuid=playlist.id_user_playlist %}" class="btn btn-yellow mt-4"><i class="fas fa-plus mr-1"></i>Tambah Lagu</a>
         </div>
     </div>
@@ -165,6 +169,33 @@
         })
         console.log(id_lagu)
     }
+
+    document.querySelectorAll('.hapus').forEach(item => {
+        item.addEventListener('click', event => {
+            event.preventDefault()
+            console.log('hapus')
+            var id_playlist = '{{ playlist.id_playlist }}'
+            var id_song = item.parentNode.parentNode.querySelector('td').getAttribute('value')
+            console.log(id_song)
+            fetch ("{% url 'playlist:delete_song' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id_song,
+                    playlist: id_playlist
+                })
+            })
+            .then (response => {
+                if (response.ok) {
+                    //reload
+                    window.location.reload()
+                }
+                throw new Error('Request failed')
+            })
+        })
+    })
 
 
 </script>

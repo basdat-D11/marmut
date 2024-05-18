@@ -85,13 +85,13 @@
 <body>
     <div class="card">
         <div class="icon">
-            <i class="fas fa-exclamation-triangle"></i>
+            <i class="fas fa-check-circle"></i>
         </div>
         <h1 class="title">Berhasil Menambahkan Lagu</h1>
-        <p class="text">Berhasil menambahkan Lagu dengan judul 'Song1' ke 'Playlist1'!</p>
+        <p class="text">Berhasil menambahkan Lagu dengan judul '{{ nama_lagu }}' ke '{{ nama_playlist }}'!</p>
         <div class="btn-container">
-            <a href="#" class="btn btn-primary">Ke Playlist</a>
-            <button class="btn btn-secondary">Kembali</button>
+            <a href="{% url 'playlist:show_playlist' %}"" class="btn btn-primary">Ke Playlist</a>
+            <button onclick="window.history.back();"  class="btn btn-secondary">Kembali</button>
         </div>
     </div>
 </body>

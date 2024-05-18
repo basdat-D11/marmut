@@ -82,19 +82,20 @@
 <body>
     <div class="container">
         <form action="{% url 'album:tambah_lagu' id=album.id %}" method="post">
-            <label for="album">Album:</label> Album1
+            <label for="album">Album:</label> {{ album.judul }}
 
             <label for="judul">Judul:</label>
             <input type="text" id="judul" name="judul" required>
 
             <label for="artist">Artist:</label>
-            {% if user_logged_in == "Artist" %}
-                <input type="text" id="artist" name="artist" value="{{ user_logged_in }}" readonly>
+            {% if role == 'artis' %}
+                <input type="text" id="artist_name" name="artist_name" value="{{ name }}" readonly>
+                <input type="hidden" id="artist_email" name="artist_email" value="{{ email }}">
             {% else %}
-                <select id="artist" name="artist">
+                <select id="artist_email" name="artist_email">
                     <option value="">Pilih Artist</option>
                     {% for artist in artists %}
-                        <option value="{{ artist }}">{{ artist }}</option>
+                        <option value="{{ artist.email }}">{{ artist.nama }}</option>
                     {% endfor %}
                 </select>
             {% endif %}
@@ -102,7 +103,11 @@
             <label for="songwriter">Songwriter:</label>
             <select id="songwriter" name="songwriter" multiple>
                 {% for songwriter in songwriters %}
-                    <option value="{{ songwriter }}">{{ songwriter }}</option>
+                    {% if songwriter == name %}
+                        <option value="{{ songwriter.email }}" selected data-fixed>{{ songwriter.nama }}</option>
+                    {% else %}
+                        <option value="{{ songwriter.email }}">{{ songwriter.nama }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
 
@@ -121,3 +126,17 @@
     </div>
 </body>
 </html>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const selectElement = document.getElementById('songwriter');
+        const fixedOptions = selectElement.querySelectorAll('option[data-fixed]');
+        
+        selectElement.addEventListener('change', () => {
+            fixedOptions.forEach(option => {
+                if (!option.selected) {
+                    option.selected = true;
+                }
+            });
+        });
+    });
+</script>

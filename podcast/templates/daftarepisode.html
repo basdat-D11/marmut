@@ -83,10 +83,8 @@
             <td>{{ episode.deskripsi }}</td>
             <td>{{ episode.durasi }} menit</td>
             <td>{{ episode.tanggal_rilis }}</td>
-      
             <td>
                 <form action="{% url 'podcast:delete_episode' %}" method="POST">
-                    {% csrf_token %}
                     <input type="hidden" name="episode_id" value="{{ episode.id_episode }}">
                     <input type="hidden" name="podcast_id" value="{{ episode.id_konten_podcast }}">
                     <button type="submit">Hapus</button>

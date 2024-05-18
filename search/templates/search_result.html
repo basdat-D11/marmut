@@ -3,9 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Hasil Pencarian</title>
-    <!-- Tambahkan link CSS untuk Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
         .search-container {
             background: white;
             padding: 2rem;
@@ -16,66 +39,146 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-around; /* Adjusted for better spacing */
+            margin-top: 100px; /* Adjust this value if needed to avoid overlap with navbar */
         }
         .search-title {
             color: #667eea;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-top: 20px; /* Increased margin-top */
+            margin-bottom: 20px; /* Increased margin-bottom */
             font-size: 1.5rem;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 20px; /* Adjusted margin-top */
         }
         th, td {
-            border: 1px solid #e2e8f0; /* Light gray border */
+            border: 1px solid #e2e8f0;
             padding: 8px;
-            text-align: left; /* Align text to the left */
+            text-align: left;
         }
         th {
-            background-color: #ebf4ff; /* Light blue background */
+            background-color: #ebf4ff;
         }
         tr:nth-child(even) {
-            background-color: #f7fafc; /* Lighter gray background for even rows */
+            background-color: #f7fafc;
         }
         a {
-            color: #667eea; /* Match the color scheme of the dashboard */
+            color: #667eea;
             text-decoration: none;
         }
         a:hover {
             text-decoration: underline;
         }
+        .search-input {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            outline: none;
+            width: 250px;
+            padding-right: 2.5rem;
+            background-color: #f0f0f0;
+        }
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            cursor: pointer;
+        }
+        button.search-icon {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .back-button {
+            background: black;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .centered-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 56px); /* Adjust height to account for navbar height */
+        }
     </style>
 </head>
-<body class="bg-purple-400 flex items-center justify-center h-screen">
-    <div class="search-container">
-        <!-- Updated part: Displaying search results title with the searched term -->
-        <div class="search-title">Hasil Pencarian "{{ query }}"</div>
-        {% if results %}
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr class="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        <th class="px-6 py-3">Tipe</th>
-                        <th class="px-6 py-3">Judul</th>
-                        <th class="px-6 py-3">Oleh</th>
-                        <th class="px-6 py-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for result in results %}
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.type }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.title }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.by }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap"><a href="#" class="text-indigo-600 hover:text-indigo-900">Lihat</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="text-sm text-gray-600">Maaf, pencarian untuk "{{ query }}" tidak ditemukan.</p>
+<body class="bg-purple-400">
+    <div class="navbar">
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
+        <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+        <a href="{% url 'search:search_bar' %}">Search Bar</a>
+        <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+        <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+        {% if premium %}
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
         {% endif %}
+
+        {% if 'podcaster' in role %}
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
+
+        {% if 'artis' in role or 'songwriter' in role %}
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="#">Logout</a>
     </div>
+
+    <div class="centered-container">
+        <div class="search-container">
+            <form action="{% url 'search:search_results' %}" method="get" class="relative">
+                <input type="text" id="search" name="search" placeholder="Search..." class="search-input">
+                <button type="submit" class="search-icon">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+            <div class="search-title">Hasil Pencarian "{{ search }}"</div>
+            {% if results %}
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr class="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3">Tipe</th>
+                            <th class="px-6 py-3">Judul</th>
+                            <th class="px-6 py-3">Oleh</th>
+                            <th class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for result in results %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ result.contenttype }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ result.title }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ result.creatorname }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if result.contenttype == 'Song' %}
+                                        <a href="{% url 'playlist:play_song' item_uuid=result.itemuuid %}" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                    {% elif result.contenttype == 'User Playlist' %}
+                                        <a href="{% url 'playlist:detail' item_uuid=result.itemuuid %}" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                    {% elif result.contenttype == 'Podcast' %}
+                                        <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ result.itemuuid }}" class="text-indigo-600 hover:text-indigo-900">Lihat</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-sm text-gray-600">Maaf, pencarian untuk "{{ search }}" tidak ditemukan.</p>
+            {% endif %}
+            <div class="flex justify-center mt-4">
+                <a href="{% url 'search:search_bar' %}" class="back-button">Kembali</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>

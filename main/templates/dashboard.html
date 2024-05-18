@@ -40,13 +40,13 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="">Dashboard</a>
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
         <a href="{% url 'chart:lihat_chart' %}">Chart</a>
-        <a href="#">Search Bar</a>
+        <a href="{% url 'search:search_bar' %}">Search Bar</a>
         <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
-        <a href="#">Langganan Paket</a>
+        <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
         {% if premium %}
-            <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
         {% endif %}
 
         {% if 'podcaster' in role %}
@@ -54,10 +54,10 @@
         {% endif %}
 
         {% if 'artis' in role or 'songwriter' in role %}
-            <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
-            <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
         {% endif %}
-        <a href="#">Logout</a>
+        <a href="{% url 'main:logout' %}">Logout</a>
     </div>
 
     <div class="content">

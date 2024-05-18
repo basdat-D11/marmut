@@ -12,24 +12,64 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
     <style>
         body {
-            background: linear-gradient(to right, #667eea, #764ba2);
             font-family: Arial, sans-serif;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            padding: 0;
+            background: linear-gradient(to right, #667eea, #764ba2);
         }
-    </style>
-</head>
-<body class="bg-gray-100">
+    
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+    
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+    
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    
+        .content {
+            padding: 20px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="navbar">
+            <a href="{% url 'main:dashboard' %}">Dashboard</a>
+            <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+            <a href="{% url 'search:search_bar' %}">Search Bar</a>
+            <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+            <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+            {% if akun.premium %}
+                <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+            {% endif %}
+    
+            {% if 'podcaster' in akun.role %}
+                <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+            {% endif %}
+    
+            {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+                <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+                <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+            {% endif %}
+            <a href="{% url 'main:logout' %}">Logout</a>
+        </div>
     <div class="container mx-auto py-8">
         <h1 class="text-3xl font-bold mb-6">User Playlist Detail</h1>
         
         <!-- If no playlist -->
         {% if not playlist %}
             <h2 class="text-xl mb-4">Anda Belum Memiliki Playlist <i class="far fa-sad-tear"></i></h2>
-            <a href="#" class="text-yellow-500 hover:underline"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
+            <a href="{% url 'playlist:add_playlist' %}" class="text-yellow-500 hover:underline"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
         
         <!-- If there are playlists -->
         {% else %}
@@ -51,17 +91,13 @@
                             <td class="px-6 py-4">{{ playlist.jumlah_lagu }}</td>
                             <td class="px-6 py-4">{{ playlist.total_durasi }} menit</td>
                             <td class="px-6 py-4">
-                                <form action="{% url 'playlist:detail' %}" method="POST">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
-                                    <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Detail</button>
-                                </form>
+                                <a href="{% url 'playlist:detail' item_uuid=playlist.id_user_playlist %}" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Detail</a>
                                 <form action="{% url 'playlist:show_edit_playlist' item_uuid=playlist.id_user_playlist %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="playlist_id" value="{{ playlist.id_user_playlist }}">
                                     <button type="submit" class="text-blue-500 hover:underline mr-2"><i class="fas fa-info-circle"></i> Ubah</button>
                                 </form>
-                                <a href="#" class="text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
+                                <a href="#" class="hapus text-red-500 hover:underline"><i class="fas fa-trash-alt"></i> Hapus</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -70,5 +106,31 @@
             <a href="{% url 'playlist:add_playlist' %}" class="text-yellow-500 hover:underline mt-4"><i class="fas fa-plus-circle mr-1"></i>Tambah Playlist</a>
         {% endif %}
     </div>
+    <script>
+
+        // Delete playlist
+        $('.hapus').click(function(e) {
+            e.preventDefault();
+            console.log('hapus');
+            var playlist_id = $(this).closest('tr').find('input[name="playlist_id"]').val();
+            console.log(playlist_id)
+            fetch ('{% url "playlist:delete_playlist" %}', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'playlist_id': playlist_id
+                })
+            })
+            //cek response
+            .then (response => {
+                if (response.ok) {
+                    //reload
+                    location.reload();
+                }
+                throw new Error('Request failed.');
+            })
+        });
+
+
+    </script>
 </body>
 </html>

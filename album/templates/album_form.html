@@ -40,7 +40,7 @@
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
-            color: #000000; /* changed to black */
+            color: #000000;
         }
 
         input[type="text"],
@@ -53,7 +53,7 @@
             outline: none;
             margin-bottom: 1rem;
             transition: border-color 0.2s;
-            box-sizing: border-box; /* Penambahan ini untuk memastikan ukuran input sesuai dengan width form */
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus,
@@ -70,30 +70,86 @@
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s;
-            display: block; /* Membuat tombol submit menjadi full width */
+            display: block;
             width: 100%;
         }
 
         input[type="submit"]:hover {
             background-color: #7353AD;
         }
+
+        .centered-text {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <form action="/album/create" method="post">
+        <form action="/album/create" method="post" onsubmit="return validateForm()">
+            <h2 class="centered-text">CREATE ALBUM</h2>
             <label for="judul">Judul Album:</label>
             <input type="text" id="judul" name="judul">
 
             <label for="label">Label:</label>
             <select id="label" name="label">
+                <option value="" disabled selected>Select Label</option>
                 {% for label in labels %}
-                <option value="{{ label }}">{{ label }}</option>
+                <option value="{{ label.id }}">{{ label.nama }}</option>
                 {% endfor %}
             </select>
+            
+            <h2 class="centered-text">LAGU PERTAMA</h2>
+            <label for="judul">Judul:</label>
+            <input type="text" id="judul" name="judul" required>
+
+            <label for="artist">Artist:</label>
+            {% if role == 'artis' %}
+                <input type="text" id="artist_name" name="artist_name" value="{{ name }}" readonly>
+                <input type="hidden" id="artist_email" name="artist_email" value="{{ email }}">
+            {% else %}
+                <select id="artist_email" name="artist_email">
+                    <option value="">Pilih Artist</option>
+                    {% for artist in artists %}
+                        <option value="{{ artist.email }}">{{ artist.nama }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+            <label for="songwriter">Songwriter:</label>
+            <select id="songwriter" name="songwriter" multiple>
+                {% for songwriter in songwriters %}
+                    {% if songwriter == name %}
+                        <option value="{{ songwriter.email }}" selected data-fixed>{{ songwriter.nama }}</option>
+                    {% else %}
+                        <option value="{{ songwriter.email }}">{{ songwriter.nama }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <label for="genre">Genre:</label>
+            <select id="genre" name="genre" multiple>
+                {% for genre in genres %}
+                    <option value="{{ genre }}">{{ genre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="durasi">Durasi:</label>
+            <input type="text" id="durasi" name="durasi" required>
 
             <input type="submit" value="Submit">
         </form>
     </div>
 </body>
 </html>
+<script>
+    function validateForm() {
+        var selectedOption = document.getElementById("label").value;
+        if (selectedOption === "") {
+            alert("Please select a label.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
+    }
+</script>

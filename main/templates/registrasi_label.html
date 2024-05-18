@@ -66,8 +66,10 @@
     </style>
 </head>
 <body>
+    
+    <p id = 'error' class="error-message">{{ error_message }}</p>
     <h2>Registration Form</h2>
-    <form action="#" method="post">
+    <form action="{% url 'main:registrasi_label' %}" method="post">
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email" required><br><br>
         <label for="password">Password:</label><br>
