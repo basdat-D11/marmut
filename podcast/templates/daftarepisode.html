@@ -83,7 +83,7 @@
             <td>{{ episode.deskripsi }}</td>
             <td>{{ episode.durasi }} menit</td>
             <td>{{ episode.tanggal_rilis }}</td>
-            <td>{{ episode.id_konten_podcast }}</td>
+      
             <td>
                 <form action="{% url 'podcast:delete_episode' %}" method="POST">
                     {% csrf_token %}
