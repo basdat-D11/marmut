@@ -47,11 +47,16 @@ def show_detail_playlist(request, item_uuid):
     query_str = f"SELECT * FROM akun WHERE email = '{pembuat}'"
     hasil = query(query_str)
     pembuat = hasil[0]['nama']
+    email_pembuat = hasil[0]['email']
+    is_owner = False
+    if request.session.get('akun', None)['email'] == email_pembuat:
+        is_owner = True
 
     print(data_playlist)
 
     return render(request, 'detail.html', {'playlist': data_playlist, 'lagu': lagu,
                                             'pembuat': pembuat,
+                                            'is_pembuat': is_owner,
                                             'akun': request.session.get('akun', None)})
 
 @csrf_exempt
