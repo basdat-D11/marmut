@@ -4,25 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Podcast</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #557dff50;
-            color: #000000;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #667eea, #764ba2);
             text-align: center;
-            padding: 20px;
         }
-        h1 {
-            margin-top: 20px;
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
         }
         .container {
             width: 80%;
             margin: 0 auto;
+            padding: 20px;
         }
         .podcast-list {
             margin: 0 auto;
             border-collapse: collapse;
-            width: 80%;
+            width: 100%;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -52,9 +68,6 @@
         .action-buttons a:hover {
             background-color: #6a00ff63;
         }
-        .back-button {
-            margin-top: 20px; 
-        }
         button {
             padding: 10px 20px;
             font-size: 14px;
@@ -71,48 +84,70 @@
     </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
+        <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+        <a href="{% url 'search:search_bar' %}">Search Bar</a>
+        <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+        <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+        {% if akun.premium %}
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+        {% endif %}
 
-<h1>List Podcast</h1>
+        {% if 'podcaster' in akun.role %}
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
 
-<div class="container">
-    <table class="podcast-list">
-        <thead>
-            <tr>
-                <th>Judul</th>
-                <th>Jumlah Episode</th>
-                <th>Total Durasi</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for podcast in podcasts %}
-            <tr>
-                <td>{{ podcast.judul }}</td>
-                <td>{{ podcast.jumlah_episode }}</td>
-                <td>{{ podcast.total_durasi }} menit</td>
-                <td class="action-buttons">
-                    <a href="{% url 'podcast:daftar_episode' %}?podcast={{ podcast.id_konten }}">Lihat Daftar Episode</a>
-                    <a href="{% url 'podcast:create_episode' %}?podcast={{ podcast.id_konten }}">Tambah Episode</a>
-                    <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ podcast.id_konten }}">Play Podcast</a>
-                    <form action="{% url 'podcast:delete_podcast' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="podcast_id" value="{{ podcast.id_konten }}">
-                        <button type="submit">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="{% url 'main:logout' %}">Logout</a>
+    </div>
+    <!-- End Navbar -->
 
-<button id="backButton">Kembali</button>
+    <h1 class="text-3xl font-bold mb-6">List Podcast</h1>
 
-<script>
-    document.getElementById("backButton").onclick = function() {
-        window.location.href = "{% url 'podcast:show_podcast' %}";
-    };
-</script>
+    <div class="container">
+        <table class="podcast-list">
+            <thead>
+                <tr>
+                    <th>Judul</th>
+                    <th>Jumlah Episode</th>
+                    <th>Total Durasi</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for podcast in podcasts %}
+                <tr>
+                    <td>{{ podcast.judul }}</td>
+                    <td>{{ podcast.jumlah_episode }}</td>
+                    <td>{{ podcast.total_durasi }} menit</td>
+                    <td class="action-buttons">
+                        <a href="{% url 'podcast:daftar_episode' %}?podcast={{ podcast.id_konten }}">Lihat Daftar Episode</a>
+                        <a href="{% url 'podcast:create_episode' %}?podcast={{ podcast.id_konten }}">Tambah Episode</a>
+                        <!-- <a href="{% url 'podcast:play_podcast' %}?podcast_id={{ podcast.id_konten }}">Play Podcast</a> -->
+                        <form action="{% url 'podcast:delete_podcast' %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="podcast_id" value="{{ podcast.id_konten }}">
+                            <button type="submit">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button id="backButton">Kembali</button>
+
+    <script>
+        document.getElementById("backButton").onclick = function() {
+            window.location.href = "{% url 'podcast:show_podcast' %}";
+        };
+    </script>
 
 </body>
 </html>

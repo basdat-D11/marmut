@@ -96,27 +96,26 @@
 
 <!-- Navbar -->
 <div class="navbar">
-    <a href="#">Dashboard</a>
+    <a href="{% url 'main:dashboard' %}">Dashboard</a>
     <a href="{% url 'chart:lihat_chart' %}">Chart</a>
-    <a href="#">Search Bar</a>
+    <a href="{% url 'search:search_bar' %}">Search Bar</a>
     <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
-    <a href="#">Langganan Paket</a>
-    {% if premium %}
-        <a href="#">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+    <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+    {% if akun.premium %}
+        <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
     {% endif %}
 
-    {% if 'podcaster' in role %}
+    {% if 'podcaster' in akun.role %}
         <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
     {% endif %}
 
-    {% if 'artis' in role or 'songwriter' in role %}
-        <a href="#">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
-        <a href="#">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+    {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+        <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+        <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
     {% endif %}
-    <a href="#">Logout</a>
+    <a href="{% url 'main:logout' %}">Logout</a>
 </div>
 
-<!-- CHART LIST -->
 <!-- CHART LIST -->
 <div class="content">
     <div class="container">
@@ -138,7 +137,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <button onclick="goBack()">Kembali</button>
+            <button onclick="history.back()">Kembali</button>
        </div>
     </div> 
 
@@ -207,8 +206,13 @@
         });
     }
 
-    function viewChartDetail(chartType) {
-        window.location.href = "{% url 'chart:detail_chart' %}?id_lagu=" + chartType;
+    function viewChartDetail(item_uuid) {
+        console.log("Navigating to play_song with item_uuid:", item_uuid); // Log to check item_uuid
+        if (item_uuid) {
+            window.location.href = "{% url 'playlist:play_song' 'item_uuid_placeholder' %}".replace('item_uuid_placeholder', item_uuid);
+        } else {
+            alert("ID Lagu tidak valid.");
+        }
     }
 
     function goBack() {

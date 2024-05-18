@@ -4,20 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Episode</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #557dff50;
-            color: #000000;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #667eea, #764ba2);
             text-align: center;
         }
-        h1 {
-            margin-top: 20px;
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
         }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
         form {
             width: 50%;
             margin: 20px auto;
         }
+
         form input, form select, form button {
             display: block;
             margin: 10px auto;
@@ -26,6 +51,7 @@
             border: 1px solid #2d45ff;
             border-radius: 5px;
         }
+
         button {
             padding: 8px 15px;
             font-size: 14px;
@@ -35,29 +61,76 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #6a00ff63;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .popup.show {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <form id="createEpisodeForm">
-        <label for="podcast">Podcast:</label>
-        <select id="podcast" name="podcast" required>
-            {% for podcast in podcasts %}
-                <option value="{{ podcast.id_konten }}">{{ podcast.judul }}</option>
-            {% endfor %}
-        </select>
-        <label for="judul_episode">Judul:</label>
-        <input type="text" id="judul_episode" name="judul" required>
-        <label for="deskripsi">Deskripsi:</label>
-        <input type="text" id="deskripsi" name="deskripsi" required>
-        <label for="durasi_episode">Durasi:</label>
-        <input type="text" id="durasi_episode" name="durasi" required>
-        <button type="submit">SUBMIT</button>
-    </form>
-    
-    <button id="backButton">Kembali</button>
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
+        <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+        <a href="{% url 'search:search_bar' %}">Search Bar</a>
+        <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+        <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+        {% if akun.premium %}
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+        {% endif %}
+
+        {% if 'podcaster' in akun.role %}
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
+
+        {% if 'artis' in akun.role or 'songwriter' in akun.role %}
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="{% url 'main:logout' %}">Logout</a>
+    </div>
+    <!-- End Navbar -->
+
+    <h1 class="text-3xl font-bold mb-6">Create Episode</h1>
+
+    <div class="content">
+        <form id="createEpisodeForm">
+            <label for="podcast">Podcast:</label>
+            <select id="podcast" name="podcast" required>
+                {% for podcast in podcasts %}
+                    <option value="{{ podcast.id_konten }}">{{ podcast.judul }}</option>
+                {% endfor %}
+            </select>
+            <label for="judul_episode">Judul:</label>
+            <input type="text" id="judul_episode" name="judul" required>
+            <label for="deskripsi">Deskripsi:</label>
+            <input type="text" id="deskripsi" name="deskripsi" required>
+            <label for="durasi_episode">Durasi:</label>
+            <input type="text" id="durasi_episode" name="durasi" required>
+            <button type="submit">SUBMIT</button>
+        </form>
+        
+        <button id="backButton">Kembali</button>
+
+        <div id="popup" class="popup">Episode berhasil dibuat!</div>
+    </div>
 
     <script>
         document.getElementById("backButton").onclick = function() {
@@ -81,7 +154,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    window.location.href = "{% url 'podcast:daftar_episode' %}?podcast=" + jsonData['podcast'];  // Redirect to the episode list page
+                    document.getElementById('popup').classList.add('show');
+                    setTimeout(() => {
+                        window.location.href = "{% url 'podcast:daftar_episode' %}?podcast=" + jsonData['podcast'];  // Redirect to the episode list page
+                    }, 2000);
                 } else {
                     alert("Failed to create the episode.");
                 }
@@ -92,5 +168,6 @@
             });
         };
     </script>
+
 </body>
 </html>
