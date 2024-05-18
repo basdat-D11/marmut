@@ -1,17 +1,23 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest
 from django.db import connection
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseNotAllowed
+from django.urls import reverse
 from utils.query import query
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 import uuid
 import logging
+import psycopg2
 
 logger = logging.getLogger(__name__)
 
 def kelola_podcast(request):
-    akun = request.session.get('akun', None)
+    akun = request.session.get('akun')
+    if not akun:
+        return redirect('login')
+
     premium = request.session.get('premium', False)
     role = akun['role']
     context = {
@@ -59,7 +65,11 @@ def create_podcast(request):
     return render(request, 'createpodcast.html')
 
 def list_podcast(request):
-    email_podcaster = request.session.get('akun')['email']
+    akun = request.session.get('akun')
+    if not akun:
+        return redirect('login')
+
+    email_podcaster = akun['email']
     query_str = f"""
     SELECT podcast.id_konten, konten.judul, COUNT(episode.id_episode) as jumlah_episode, COALESCE(SUM(episode.durasi), 0) as total_durasi
     FROM podcast 
@@ -119,7 +129,11 @@ def create_episode(request):
             logger.error(f"Error inserting episode: {str(e)}")
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
-    email_podcaster = request.session.get('akun')['email']
+    akun = request.session.get('akun')
+    if not akun:
+        return redirect('login')
+
+    email_podcaster = akun['email']
     query_str = f"SELECT podcast.id_konten, konten.judul FROM podcast JOIN konten ON podcast.id_konten = konten.id WHERE podcast.email_podcaster = '{email_podcaster}';"
     hasil = query(query_str)
     return render(request, 'createepisode.html', {'podcasts': hasil})
@@ -143,51 +157,7 @@ def daftar_episode(request):
     return render(request, 'daftarepisode.html', {'episodes': hasil})
 
 @csrf_exempt
-def delete_podcast(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            podcast_id = data.get('podcast_id')
-
-            query_str = f"DELETE FROM episode WHERE id_konten_podcast = '{podcast_id}';"
-            query(query_str)
-            logger.info(f"Deleted episodes for podcast: {podcast_id}")
-
-            query_str = f"DELETE FROM podcast WHERE id_konten = '{podcast_id}';"
-            query(query_str)
-            logger.info(f"Deleted podcast: {podcast_id}")
-
-            query_str = f"DELETE FROM konten WHERE id = '{podcast_id}';"
-            query(query_str)
-            logger.info(f"Deleted konten: {podcast_id}")
-
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            logger.error(f"Error deleting podcast: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    return JsonResponse({'status': 'error'}, status=400)
-
-@csrf_exempt
-def delete_episode(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            episode_id = data.get('episode_id')
-
-            query_str = f"DELETE FROM episode WHERE id_episode = '{episode_id}';"
-            query(query_str)
-            logger.info(f"Deleted episode: {episode_id}")
-
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            logger.error(f"Error deleting episode: {str(e)}")
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    return JsonResponse({'status': 'error'}, status=400)
-
-
-@csrf_exempt
 def play_podcast(request):
-    # try:
     podcast_id = request.GET.get('podcast_id')
     data_podcast = {}
     data_episode = []
@@ -217,7 +187,6 @@ def play_podcast(request):
                 'podcaster': podcast_details[3],
                 'total_durasi': formatted_duration
             }
-
 
     # Query to get genres
     with connection.cursor() as cursor:
@@ -255,5 +224,29 @@ def play_podcast(request):
 
     return render(request, 'playpodcast.html', context)
 
-    # except Exception as e:
-    #     return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+def delete_podcast(request):
+    podcast_id = request.GET.get('podcast_id')
+    
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'DELETE FROM marmut.podcast WHERE id_konten = %s', [podcast_id]
+        )
+        cursor.execute(
+            'DELETE FROM marmut.konten WHERE id = %s', [podcast_id]
+        )
+        connection.commit()
+    
+    return HttpResponseRedirect(reverse('podcast:list_podcast'))
+
+
+def delete_episode(request):
+    episode_id = request.GET.get('episode_id')
+    podcast_id = request.GET.get('podcast_id')
+    
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'DELETE FROM marmut.episode WHERE id_episode = %s', [episode_id]
+        )
+        connection.commit()
+    
+    return HttpResponseRedirect(reverse('podcast:daftar_episode') + f'?podcast_id={podcast_id}')

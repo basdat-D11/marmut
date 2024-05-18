@@ -46,6 +46,19 @@
         .action-buttons a:hover {
             background-color: #6a00ff63;
         }
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #6900ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #6a00ff63;
+        }
     </style>
 </head>
 <body>
@@ -70,7 +83,16 @@
             <td>{{ episode.deskripsi }}</td>
             <td>{{ episode.durasi }} menit</td>
             <td>{{ episode.tanggal_rilis }}</td>
-            <td class="action-buttons"><a href="#" onclick="deleteEpisode('{{ episode.id_episode }}')" class="button">Hapus</a></td>
+            <td>{{ episode.id_konten_podcast }}</td>
+            <td>
+                <form action="{% url 'podcast:delete_episode' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="episode_id" value="{{ episode.id_episode }}">
+                    <input type="hidden" name="podcast_id" value="{{ episode.id_konten_podcast }}">
+                    <button type="submit">Hapus</button>
+                </form>
+
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -85,31 +107,6 @@
     document.getElementById("backButton").onclick = function() {
         window.location.href = "{% url 'podcast:show_podcast' %}";
     };
-
-    function deleteEpisode(episodeId) {
-        if (confirm("Apakah Anda yakin ingin menghapus episode ini?")) {
-            fetch("{% url 'podcast:delete_episode' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ episode_id: episodeId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    location.reload();
-                } else {
-                    alert("Gagal menghapus episode.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Gagal menghapus episode.");
-            });
-        }
-    }
 </script>
 
 </body>
