@@ -12,9 +12,10 @@
             font-family: Arial, sans-serif;
             margin: 0;
             display: flex;
+            flex-direction: column; /* Adjust to allow navbar and content to be stacked */
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            justify-content: flex-start; /* Adjust to start from top */
+            min-height: 100vh;
         }
 
         .container {
@@ -77,9 +78,62 @@
         input[type="submit"]:hover {
             background-color: #3e2a7a;
         }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            width: 100%; /* Ensure navbar spans full width */
+            position: fixed; /* Keep navbar at top */
+            top: 0;
+            z-index: 999;
+        }
+        
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .content {
+            margin-top: 60px; /* Adjust this value to create space below the navbar */
+            width: 100%; /* Ensure content spans full width */
+            max-width: 1200px; /* Adjust with desired width */
+            margin: auto;
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <a href="{% url 'main:dashboard' %}">Dashboard</a>
+        {% if 'label' not in role %}
+            <a href="{% url 'chart:lihat_chart' %}">Chart</a>
+            <a href="{% url 'search:search_bar' %}">Search Bar</a>
+            <a href="{% url 'playlist:show_playlist' %}">Kelola Playlist</a>
+            <a href="{% url 'langganan:langganan_paket' %}">Langganan Paket</a>
+        {% endif %}
+
+        {% if premium %}
+            <a href="{% url 'download:downloaded_songs' %}">Kelola Downloaded Songs</a><!-- Hanya untuk Premium -->
+        {% endif %}
+    
+        {% if 'podcaster' in role %}
+            <a href="{% url 'podcast:show_podcast' %}">Kelola Podcast</a><!-- Hanya untuk Podcaster -->
+        {% endif %}
+    
+        {% if 'artis' in role or 'songwriter' in role or 'label' in role %}
+            <a href="{% url 'album:album_list' %}">Kelola Album & Songs</a><!-- Hanya untuk Artist/Songwriter -->
+            <a href="{% url 'royalti:royalti_list' %}">Cek Royalti</a><!-- Hanya untuk Artist/Songwriter/label -->
+        {% endif %}
+        <a href="{% url 'main:logout' %}">Logout</a>
+    </div>
     <div class="container">
         <form action="{% url 'album:tambah_lagu' id=album.id %}" method="post">
             <label for="album">Album:</label> {{ album.judul }}
@@ -103,7 +157,7 @@
             <label for="songwriter">Songwriter:</label>
             <select id="songwriter" name="songwriter" multiple>
                 {% for songwriter in songwriters %}
-                    {% if songwriter == name %}
+                    {% if songwriter.nama == name %}
                         <option value="{{ songwriter.email }}" selected data-fixed>{{ songwriter.nama }}</option>
                     {% else %}
                         <option value="{{ songwriter.email }}">{{ songwriter.nama }}</option>

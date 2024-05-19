@@ -90,6 +90,7 @@ def login(request):
         hasil = query(query_str)
         if len(hasil) == 1:
             akun = {}
+            akun['role'] = 'label'
             akun['nama'] = hasil[0]['nama']
             akun['email'] = hasil[0]['email']
             akun['kontak'] = hasil[0]['kontak']
