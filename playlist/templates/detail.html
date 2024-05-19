@@ -158,6 +158,13 @@
                 id_playlist: id_playlist
             })
         })
+        .then (response => {
+            if (response.ok) {
+                //allert
+                alert('Playlist dimainkan')
+            }
+            throw new Error('Request failed')
+        })
         console.log(id_playlist)
     }
 
@@ -169,8 +176,15 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id_lagu: id_lagu
+                lagu: id_lagu
             })
+        })
+        .then (response => {
+            if (response.ok) {
+                //allert
+                alert('Lagu dimainkan')
+            }
+            throw new Error('Request failed')
         })
         console.log(id_lagu)
     }
